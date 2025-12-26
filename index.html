@@ -3,109 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Demat Task - Login</title>
+    <title>Login - Demat Task</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: sans-serif; }
         body { 
-            background: url('https://vader-prod.s3.amazonaws.com/1684338573-2023-mahindra-scorpio-classic-front-quarter-6464f78696884.jpg') no-repeat center center fixed; 
-            background-size: cover;
-            height: 100vh;
-            display: flex;
-            align-items: flex-end;
+            background: #000 url('https://vader-prod.s3.amazonaws.com/1684338573-2023-mahindra-scorpio-classic-front-quarter-6464f78696884.jpg') no-repeat center top;
+            background-size: contain; height: 100vh; display: flex; justify-content: center; align-items: flex-end;
         }
-        .container {
-            background: white;
-            width: 100%;
-            border-radius: 30px 30px 0 0;
-            padding: 30px 20px;
-            box-shadow: 0 -10px 25px rgba(0,0,0,0.5);
+        .container { 
+            background: white; width: 100%; max-width: 450px; border-radius: 30px 30px 0 0; 
+            padding: 30px 20px; box-shadow: 0 -5px 20px rgba(0,0,0,0.3); text-align: center;
         }
         .tabs { display: flex; justify-content: space-around; margin-bottom: 20px; border-bottom: 1px solid #eee; }
-        .tab { padding: 10px 20px; cursor: pointer; color: #888; font-weight: bold; font-size: 18px; }
+        .tab { padding: 10px; cursor: pointer; color: #888; font-weight: bold; }
         .tab.active { color: black; border-bottom: 3px solid #333; }
-        
         .input-group { background: #f2f2f2; border-radius: 15px; display: flex; align-items: center; padding: 12px 15px; margin-bottom: 12px; }
-        .input-group span { color: #555; font-weight: bold; border-right: 1px solid #ccc; padding-right: 10px; margin-right: 10px; }
-        input { border: none; background: transparent; width: 100%; outline: none; font-size: 16px; color: #333; }
-        
-        .main-btn { 
-            background: linear-gradient(to right, #4a4242, #2d2d2d); color: white; width: 100%; padding: 15px; 
-            border-radius: 30px; border: none; font-size: 18px; font-weight: bold; 
-            margin-top: 15px; cursor: pointer; box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-        }
-        .link-text { margin-top: 15px; color: #666; font-size: 14px; text-align: center; cursor: pointer; }
+        .input-group span { border-right: 1px solid #ccc; padding-right: 10px; margin-right: 10px; font-weight: bold; }
+        input { border: none; background: transparent; width: 100%; outline: none; font-size: 16px; }
+        .main-btn { background: #333; color: white; width: 100%; padding: 15px; border-radius: 30px; border: none; font-weight: bold; margin-top: 10px; }
     </style>
 </head>
 <body>
-
 <div class="container">
     <div class="tabs">
-        <div class="tab" id="loginTab" onclick="showForm('login')">Login</div>
-        <div class="tab active" id="registerTab" onclick="showForm('register')">Register</div>
+        <div class="tab active" onclick="location.reload()">Register</div>
+        <div class="tab" onclick="alert('Login logic same as register')">Login</div>
     </div>
-
-    <div id="registerForm">
-        <div class="input-group"><span>+91</span><input type="number" id="reg_phone" placeholder="Enter Phone Number"></div>
-        <div class="input-group"><input type="password" id="reg_pass" placeholder="Please new password"></div>
-        <div class="input-group"><input type="password" id="reg_confirm" placeholder="Please new password again"></div>
-        <div class="input-group"><input type="password" id="reg_withdraw" placeholder="Enter Withdrawal Password"></div>
-        <div class="input-group"><input type="text" id="reg_invite" value="dd3f2eb7" readonly style="color: #999;"></div>
-        <button class="main-btn" onclick="submitData('REGISTER')">Register</button>
-        <div class="link-text" onclick="showForm('login')">I already have an account</div>
-    </div>
-
-    <div id="loginForm" style="display: none;">
-        <div class="input-group"><span>+91</span><input type="number" id="login_phone" placeholder="Enter Phone Number"></div>
-        <div class="input-group"><input type="password" id="login_pass" placeholder="Enter Password"></div>
-        <button class="main-btn" onclick="submitData('LOGIN')">Login</button>
-        <div class="link-text" onclick="showForm('register')">No account? Register</div>
-    </div>
+    <div class="input-group"><span>+91</span><input type="number" id="phone" placeholder="Enter Phone Number"></div>
+    <div class="input-group"><input type="password" id="pass" placeholder="Please new password"></div>
+    <div class="input-group"><input type="password" placeholder="Please new password again"></div>
+    <div class="input-group"><input type="password" placeholder="Enter Withdrawal Password"></div>
+    <div class="input-group"><input type="text" value="dd3f2eb7" readonly style="color:#999"></div>
+    <button class="main-btn" onclick="register()">Register</button>
 </div>
-
 <script>
-    // Aapki Google Script URL
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyWqwd09HQOZiB_-6HpMnhF-WR5PclYPqSSRRNDqHRX1OnCazgob6lNhMYOWMpa80Jn/exec";
-
-    function showForm(type) {
-        document.getElementById('loginForm').style.display = type === 'login' ? 'block' : 'none';
-        document.getElementById('registerForm').style.display = type === 'register' ? 'block' : 'none';
-        document.getElementById('loginTab').className = type === 'login' ? 'tab active' : 'tab';
-        document.getElementById('registerTab').className = type === 'register' ? 'tab active' : 'tab';
-    }
-
-    function submitData(actionType) {
-        let phone, pass, withdrawPass;
-        
-        if(actionType === 'REGISTER') {
-            phone = document.getElementById('reg_phone').value;
-            pass = document.getElementById('reg_pass').value;
-            withdrawPass = document.getElementById('reg_withdraw').value;
-            if(phone.length < 10) return alert("Bhai, sahi phone number dalo!");
-        } else {
-            phone = document.getElementById('login_phone').value;
-            pass = document.getElementById('login_pass').value;
-        }
-
-        // Data ko Google Sheet mein bhejne ke liye
-        fetch(SCRIPT_URL, {
-            method: 'POST',
-            mode: 'no-cors',
-            body: JSON.stringify({
-                phone: phone,
-                password: pass,
-                withdrawPassword: withdrawPass || '',
-                type: actionType,
-                date: new Date().toLocaleString()
-            })
-        }).then(() => {
-            // Phone number ko browser memory mein save karna
-            localStorage.setItem('userPhone', phone);
-            alert(actionType + " Successful!");
-            window.location.href = 'my.html'; // Login/Register ke baad seedha Profile page par
-        }).catch(err => alert("Error: " + err));
+    function register() {
+        const p = document.getElementById('phone').value;
+        if(p.length < 10) return alert("Sahi number dalo");
+        localStorage.setItem('userPhone', p);
+        window.location.href = 'home.html';
     }
 </script>
-
 </body>
 </html>
-index.html
