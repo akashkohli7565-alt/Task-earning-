@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background: #f8f9fa; padding-bottom: 80px; }
+        
+        /* Task Card Style */
+        .task-list { padding: 15px; }
+        .task-card { 
+            background: white; border-radius: 15px; padding: 15px; margin-bottom: 15px; 
+            display: flex; align-items: center; justify-content: space-between;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05); border: 1px solid #efefef;
+        }
+        .task-left { display: flex; align-items: center; gap: 12px; }
+        .task-logo { width: 55px; height: 55px; border-radius: 12px; object-fit: contain; }
+        .task-info b { font-size: 15px; display: block; }
+        .task-info span { font-size: 11px; color: #888; background: #f1f3f5; padding: 2px 8px; border-radius: 5px; }
+
+        .task-right { text-align: right; }
+        .price { color: #27ae60; font-weight: bold; font-size: 18px; }
+        .time { font-size: 11px; color: #999; margin-top: 4px; }
+
+        /* Terms & Conditions Modal */
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); }
+        .modal-content { 
+            background: white; width: 90%; max-width: 400px; margin: 15% auto; 
+            border-radius: 20px; padding: 20px; position: relative; animation: slideUp 0.3s;
+        }
+        @keyframes slideUp { from { transform: translateY(100px); } to { transform: translateY(0); } }
+        
+        .close-btn { position: absolute; top: 15px; right: 20px; font-size: 24px; color: #ff4444; cursor: pointer; }
+        .guidelines { margin-top: 15px; list-style: none; }
+        .guidelines li { font-size: 13px; margin-bottom: 12px; display: flex; gap: 10px; line-height: 1.4; color: #444; }
+        .num-box { background: #d1e7ff; color: #007bff; font-weight: bold; padding: 2px 6px; border-radius: 4px; height: fit-content; }
+        
+        .agree-box { margin: 20px 0; display: flex; align-items: center; gap: 10px; font-size: 13px; color: #888; }
+        .apply-btn { 
+            width: 100%; background: #d1e7ff; color: #007bff; border: none; 
+            padding: 15px; border-radius: 10px; font-weight: bold; cursor: pointer; 
+        }
+        .apply-btn.active { background: #007bff; color: white; }
+    </style>
+</head>
+<body>
+
+    <div class="task-list">
+        <div class="task-card" onclick="openModal()">
+            <div class="task-left">
+                <img src="https://i.ibb.co/WvS8fcHB/Upstox.webp" class="task-logo" alt="Upstox">
+                <div class="task-info">
+                    <b>Upstox - KYC & Earn</b>
+                    <span>Upstox | Demat A/c</span>
+                </div>
+            </div>
+            <div class="task-right">
+                <div class="price">₹100</div>
+                <div class="time"><i class="far fa-clock"></i> 10 min</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="termsModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal()">&times;</span>
+            <h3 style="margin-bottom: 10px;">Terms & Conditions</h3>
+            <p style="font-size: 14px; font-weight: bold; color: #555;">Important Guidelines</p>
+            
+            <ul class="guidelines">
+                <li><span class="num-box">1</span> You Must Be a New User for this task.</li>
+                <li><span class="num-box">2</span> Use Mobile Internet Only (No WiFi).</li>
+                <li><span class="num-box">3</span> Use Unique Mobile Numbers and Devices for this task.</li>
+                <li><span class="num-box">4</span> Fraudulent Activities Are Strictly Prohibited.</li>
+                <li><span class="num-box">5</span> Apply Only via TeekTask App Links.</li>
+            </ul>
+
+            <div class="agree-box">
+                <input type="checkbox" id="checkAgree" onclick="toggleBtn()">
+                <label for="checkAgree">I have read terms & conditions, and i'm accepted.</label>
+            </div>
+
+            <button id="applyBtn" class="apply-btn" disabled onclick="goToTask()">Apply</button>
+        </div>
+    </div>
+
+    <script>
+        function openModal() { document.getElementById('termsModal').style.display = 'block'; }
+        function closeModal() { document.getElementById('termsModal').style.display = 'none'; }
+        
+        function toggleBtn() {
+            const isChecked = document.getElementById('checkAgree').checked;
+            const btn = document.getElementById('applyBtn');
+            btn.disabled = !isChecked;
+            if(isChecked) btn.classList.add('active');
+            else btn.classList.remove('active');
+        }
+
+        function goToTask() {
+            // "Apply" par click karte hi Step 2 (Task Link page) par jayega
+            window.location.href = 'task-detail.html';
+        }
+    </script>
+</body>
+</html>
