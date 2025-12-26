@@ -3,106 +3,135 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Task Dashboard</title>
+    <title>Dashboard - Earn Money</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
-        body { background: #f8f9fa; padding-bottom: 80px; }
+        body { background: #f0f2f5; padding-bottom: 80px; }
+
+        /* Top Header Section */
+        .header { 
+            background: linear-gradient(135deg, #1e88e5, #1565c0); 
+            color: white; padding: 30px 20px; border-radius: 0 0 25px 25px;
+            text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        .header h2 { font-size: 20px; margin-bottom: 5px; }
+        .header p { font-size: 14px; opacity: 0.9; }
         
-        /* Task Card Style */
-        .task-list { padding: 15px; }
+        /* Balance Card */
+        .balance-card {
+            background: white; width: 85%; margin: -25px auto 20px;
+            padding: 15px; border-radius: 15px; display: flex; 
+            justify-content: space-around; align-items: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08); color: #333;
+        }
+        .balance-item b { display: block; font-size: 18px; color: #2ecc71; }
+        .balance-item span { font-size: 12px; color: #888; }
+
+        /* Task Section */
+        .section-title { padding: 0 20px; margin-bottom: 10px; font-size: 16px; font-weight: bold; }
+        .task-list { padding: 0 15px; }
         .task-card { 
-            background: white; border-radius: 15px; padding: 15px; margin-bottom: 15px; 
+            background: white; border-radius: 15px; padding: 15px; margin-bottom: 12px; 
             display: flex; align-items: center; justify-content: space-between;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05); border: 1px solid #efefef;
+            border: 1px solid #e0e0e0; cursor: pointer;
         }
         .task-left { display: flex; align-items: center; gap: 12px; }
-        .task-logo { width: 55px; height: 55px; border-radius: 12px; object-fit: contain; }
-        .task-info b { font-size: 15px; display: block; }
-        .task-info span { font-size: 11px; color: #888; background: #f1f3f5; padding: 2px 8px; border-radius: 5px; }
+        .task-logo { width: 50px; height: 50px; border-radius: 10px; object-fit: contain; }
+        .task-info b { font-size: 14px; display: block; }
+        .task-info span { font-size: 11px; color: #1e88e5; font-weight: bold; }
 
-        .task-right { text-align: right; }
-        .price { color: #27ae60; font-weight: bold; font-size: 18px; }
-        .time { font-size: 11px; color: #999; margin-top: 4px; }
+        .price-tag { color: #2ecc71; font-weight: bold; font-size: 17px; }
 
-        /* Terms & Conditions Modal */
-        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); }
-        .modal-content { 
-            background: white; width: 90%; max-width: 400px; margin: 15% auto; 
-            border-radius: 20px; padding: 20px; position: relative; animation: slideUp 0.3s;
+        /* Bottom Navigation */
+        .bottom-nav { 
+            position: fixed; bottom: 0; width: 100%; background: white; 
+            display: flex; justify-content: space-around; padding: 12px 0; 
+            border-top: 1px solid #eee; box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
         }
-        @keyframes slideUp { from { transform: translateY(100px); } to { transform: translateY(0); } }
-        
-        .close-btn { position: absolute; top: 15px; right: 20px; font-size: 24px; color: #ff4444; cursor: pointer; }
-        .guidelines { margin-top: 15px; list-style: none; }
-        .guidelines li { font-size: 13px; margin-bottom: 12px; display: flex; gap: 10px; line-height: 1.4; color: #444; }
-        .num-box { background: #d1e7ff; color: #007bff; font-weight: bold; padding: 2px 6px; border-radius: 4px; height: fit-content; }
-        
-        .agree-box { margin: 20px 0; display: flex; align-items: center; gap: 10px; font-size: 13px; color: #888; }
-        .apply-btn { 
-            width: 100%; background: #d1e7ff; color: #007bff; border: none; 
-            padding: 15px; border-radius: 10px; font-weight: bold; cursor: pointer; 
-        }
-        .apply-btn.active { background: #007bff; color: white; }
+        .nav-item { text-align: center; text-decoration: none; color: #aaa; font-size: 11px; transition: 0.3s; }
+        .nav-item.active { color: #1e88e5; }
+        .nav-item i { display: block; font-size: 20px; margin-bottom: 3px; }
+
+        /* Modal Style */
+        .modal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:1000; }
+        .modal-content { background:white; width:90%; max-width:380px; margin:20% auto; padding:20px; border-radius:20px; }
+        .apply-btn { width:100%; background:#1e88e5; color:white; border:none; padding:12px; border-radius:10px; margin-top:15px; font-weight:bold; cursor:pointer; }
     </style>
 </head>
 <body>
 
+    <div class="header">
+        <h2>Complete your task to earn money! 💰</h2>
+        <p>Start your journey as a business owner today.</p>
+    </div>
+
+    <div class="balance-card">
+        <div class="balance-item">
+            <span id="u_phone">User</span>
+            <b>Active</b>
+        </div>
+        <div style="border-left: 1px solid #eee; height: 30px;"></div>
+        <div class="balance-item">
+            <span>Wallet Balance</span>
+            <b>₹0.00</b>
+        </div>
+    </div>
+
+    <p class="section-title">Available Tasks</p>
+
     <div class="task-list">
-        <div class="task-card" onclick="openModal()">
+        <div class="task-card" onclick="document.getElementById('m').style.display='block'">
             <div class="task-left">
                 <img src="https://i.ibb.co/WvS8fcHB/Upstox.webp" class="task-logo" alt="Upstox">
                 <div class="task-info">
                     <b>Upstox - KYC & Earn</b>
-                    <span>Upstox | Demat A/c</span>
+                    <span>Category: Demat A/c</span>
                 </div>
             </div>
-            <div class="task-right">
-                <div class="price">₹100</div>
-                <div class="time"><i class="far fa-clock"></i> 10 min</div>
+            <div class="price-tag">₹100</div>
+        </div>
+        
+        <div class="task-card" style="opacity: 0.7;">
+            <div class="task-left">
+                <div style="width:50px; height:50px; background:#eee; border-radius:10px; display:flex; align-items:center; justify-content:center;"><i class="fas fa-plus"></i></div>
+                <div class="task-info">
+                    <b>More Tasks Coming Soon</b>
+                    <span>Stay Tuned!</span>
+                </div>
             </div>
         </div>
     </div>
 
-    <div id="termsModal" class="modal">
+    <div id="m" class="modal">
         <div class="modal-content">
-            <span class="close-btn" onclick="closeModal()">&times;</span>
-            <h3 style="margin-bottom: 10px;">Terms & Conditions</h3>
-            <p style="font-size: 14px; font-weight: bold; color: #555;">Important Guidelines</p>
-            
-            <ul class="guidelines">
-                <li><span class="num-box">1</span> You Must Be a New User for this task.</li>
-                <li><span class="num-box">2</span> Use Mobile Internet Only (No WiFi).</li>
-                <li><span class="num-box">3</span> Use Unique Mobile Numbers and Devices for this task.</li>
-                <li><span class="num-box">4</span> Fraudulent Activities Are Strictly Prohibited.</li>
-                <li><span class="num-box">5</span> Apply Only via TeekTask App Links.</li>
-            </ul>
-
-            <div class="agree-box">
-                <input type="checkbox" id="checkAgree" onclick="toggleBtn()">
-                <label for="checkAgree">I have read terms & conditions, and i'm accepted.</label>
+            <h3 style="text-align:center;">Terms & Conditions</h3>
+            <div style="font-size:13px; margin:15px 0; line-height:2;">
+                1️⃣ Must be a New User.<br>
+                2️⃣ Use Mobile Data only.<br>
+                3️⃣ Unique Device & Number.<br>
+                4️⃣ Fraud accounts will be blocked.<br>
             </div>
-
-            <button id="applyBtn" class="apply-btn" disabled onclick="goToTask()">Apply</button>
+            <button class="apply-btn" onclick="location.href='task-detail.html'">I Agree & Start Task</button>
+            <p onclick="document.getElementById('m').style.display='none'" style="text-align:center; margin-top:10px; font-size:12px; color:red; cursor:pointer;">Cancel</p>
         </div>
+    </div>
+
+    <div class="bottom-nav">
+        <a href="home.html" class="nav-item active"><i class="fas fa-home"></i>Home</a>
+        <a href="referral.html" class="nav-item"><i class="fas fa-users"></i>Referral</a>
+        <a href="tasks.html" class="nav-item"><i class="fas fa-clipboard-list"></i>Tasks</a>
+        <a href="me.html" class="nav-item"><i class="fas fa-user-circle"></i>Me</a>
     </div>
 
     <script>
-        function openModal() { document.getElementById('termsModal').style.display = 'block'; }
-        function closeModal() { document.getElementById('termsModal').style.display = 'none'; }
-        
-        function toggleBtn() {
-            const isChecked = document.getElementById('checkAgree').checked;
-            const btn = document.getElementById('applyBtn');
-            btn.disabled = !isChecked;
-            if(isChecked) btn.classList.add('active');
-            else btn.classList.remove('active');
-        }
-
-        function goToTask() {
-            // "Apply" par click karte hi Step 2 (Task Link page) par jayega
-            window.location.href = 'task-detail.html';
+        // Username display logic
+        window.onload = function() {
+            const phone = localStorage.getItem('userPhone') || "User";
+            document.getElementById('u_phone').innerText = phone;
         }
     </script>
+
 </body>
 </html>
+
