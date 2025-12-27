@@ -8,154 +8,104 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root { --primary: #0066ff; --bg: #f4f7fe; --white: #ffffff; }
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
         body { background: var(--bg); padding-bottom: 120px; }
 
-        /* Top Header */
         .header-section { background: var(--white); padding: 40px 20px; text-align: center; border-bottom-left-radius: 35px; border-bottom-right-radius: 35px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); }
         .profile-pic { width: 80px; height: 80px; background: var(--primary); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px; font-size: 30px; font-weight: 800; border: 4px solid #eef4ff; }
         .user-name { font-size: 22px; font-weight: 800; margin-bottom: 4px; color: #1a1a1a; }
         .verified-tag { color: #888; font-size: 14px; font-weight: 600; }
 
-        /* Total Balance Card (Black Style) */
         .balance-card { background: #1a1a1a; margin: 0 20px 20px; padding: 25px; border-radius: 25px; color: white; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
         .balance-card p { opacity: 0.7; font-size: 13px; margin-bottom: 10px; font-weight: 500; }
         .balance-card h2 { font-size: 38px; font-weight: 800; margin-bottom: 15px; letter-spacing: -1px; }
-        .sub-text { font-size: 12px; opacity: 0.6; }
 
-        /* Options Container */
         .options-container { padding: 0 20px; }
-        .option-item { background: var(--white); padding: 18px; border-radius: 22px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; text-decoration: none; color: inherit; transition: 0.2s; border: 1px solid rgba(0,0,0,0.02); }
-        .option-item:active { transform: scale(0.98); }
-        
-        .option-info { display: flex; align-items: center; gap: 15px; }
-        .option-icon { width: 42px; height: 42px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 18px; }
-        
+        .option-item { background: var(--white); padding: 18px; border-radius: 22px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; text-decoration: none; color: inherit; border: 1px solid rgba(0,0,0,0.02); }
+        .option-icon { width: 42px; height: 42px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 18px; margin-right: 15px; }
         .withdraw-bg { background: #eef4ff; color: var(--primary); }
         .upi-bg { background: #fff9e6; color: #ffcc00; }
-        .help-bg { background: #f0f0f0; color: #333; }
-        .logout-bg { background: #fff5f5; color: #ff4444; }
 
-        /* Withdrawal Inner Button */
-        .withdraw-alert { background: #fff5f5; color: #ff4444; padding: 6px 12px; border-radius: 8px; font-size: 11px; font-weight: 700; display: inline-block; margin-bottom: 12px; border: 1px solid #ffebeb; }
-        .btn-withdraw { width: 100%; background: #f5f5f5; color: #bbb; padding: 14px; border-radius: 14px; border: none; font-weight: 700; cursor: not-allowed; font-size: 14px; }
-
-        /* POPUP MODAL SYSTEM (Add UPI) */
         .modal-overlay { position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); display:none; align-items:center; justify-content:center; z-index:1000; padding:20px; backdrop-filter: blur(4px); }
-        .modal-box { background:white; width:100%; max-width:380px; padding:30px; border-radius:30px; animation: slideUp 0.3s ease-out; }
-        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-        
-        .modal-box h3 { margin-bottom: 20px; font-size: 20px; font-weight: 800; text-align: center; }
+        .modal-box { background:white; width:100%; max-width:380px; padding:30px; border-radius:30px; }
         .input-group { margin-bottom: 15px; }
-        .input-group label { display:block; font-size:12px; font-weight:700; margin-bottom:6px; color:#666; padding-left: 5px; }
-        .input-group input { width:100%; padding:14px; border:2px solid #f0f0f0; border-radius:12px; outline:none; font-size: 15px; background: #fafafa; transition: 0.3s; }
-        .input-group input:focus { border-color: var(--primary); background: #fff; }
-        
-        .btn-submit { width:100%; background:var(--primary); color:white; border:none; padding:16px; border-radius:15px; font-weight:700; font-size:16px; margin-top:10px; cursor: pointer; box-shadow: 0 8px 20px rgba(0,102,255,0.2); }
+        .input-group label { display:block; font-size:12px; font-weight:700; margin-bottom:6px; color:#666; }
+        .input-group input { width:100%; padding:14px; border:2px solid #f0f0f0; border-radius:12px; outline:none; }
+        .btn-submit { width:100%; background:var(--primary); color:white; border:none; padding:16px; border-radius:15px; font-weight:700; font-size:16px; cursor: pointer; }
 
-        /* Bottom Navbar */
-        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: white; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #eee; z-index: 900; }
-        .nav-item { text-decoration: none; color: #bbb; display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 11px; font-weight: 600; }
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: white; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #eee; }
+        .nav-item { text-decoration: none; color: #bbb; display: flex; flex-direction: column; align-items: center; font-size: 11px; font-weight: 600; }
         .nav-item.active { color: var(--primary); }
-        .share-tab { background: var(--primary); color: white !important; padding: 10px 25px; border-radius: 18px; margin-top: -15px; box-shadow: 0 5px 15px rgba(0,102,255,0.3); }
     </style>
 </head>
 <body>
 
     <div class="header-section">
-        <div class="profile-pic" id="avatarInitial">D</div>
-        <h2 class="user-name" id="dispName">Dear User</h2>
+        <div class="profile-pic" id="avatarInitial">U</div>
+        <h2 class="user-name" id="dispName">User</h2>
         <span class="verified-tag"><i class="fa-solid fa-circle-check" style="color:#00c853;"></i> Verified Member</span>
     </div>
 
     <div class="balance-card">
         <p>Total Balance</p>
         <h2 id="walletBalance">₹0.00</h2>
-        <p class="sub-text">Keep completing tasks to earn more!</p>
     </div>
 
     <div class="options-container">
         <div class="option-item" style="flex-direction: column; align-items: flex-start;">
-            <div class="option-info" style="margin-bottom: 15px;">
+            <div style="display: flex; align-items: center; margin-bottom: 10px;">
                 <div class="option-icon withdraw-bg"><i class="fa-solid fa-building-columns"></i></div>
                 <span style="font-weight: 800;">Withdrawal</span>
             </div>
-            <div class="withdraw-alert">⚠️ Minimum Withdrawal: ₹300</div>
-            <button class="btn-withdraw">Withdraw Funds</button>
+            <p style="color:#ff4444; font-size: 11px; font-weight: 700; margin-bottom: 10px;">⚠️ Min: ₹300</p>
+            <button style="width:100%; padding:12px; border-radius:12px; border:none; background:#f0f0f0; color:#ccc; font-weight:700;" disabled>Withdraw Funds</button>
         </div>
 
         <div class="option-item" onclick="openUPI()">
-            <div class="option-info">
+            <div style="display: flex; align-items: center;">
                 <div class="option-icon upi-bg"><i class="fa-solid fa-credit-card"></i></div>
                 <div>
                     <p style="font-weight: 800;">Add UPI ID</p>
-                    <p id="upiStatus" style="font-size: 12px; color: #999; font-weight: 600;">Not Linked</p>
+                    <p id="upiStatus" style="font-size: 12px; color: #999;">Not Linked</p>
                 </div>
             </div>
             <i class="fa-solid fa-chevron-right" style="color: #ddd;"></i>
-        </div>
-
-        <a href="https://wa.me/91XXXXXXXXXX" class="option-item">
-            <div class="option-info">
-                <div class="option-icon help-bg"><i class="fa-solid fa-phone"></i></div>
-                <div>
-                    <p style="font-weight: 800;">Help & Support</p>
-                    <p style="font-size: 12px; color: #999; font-weight: 600;">Contact us on WhatsApp</p>
-                </div>
-            </div>
-            <i class="fa-solid fa-chevron-right" style="color: #ddd;"></i>
-        </a>
-
-        <div class="option-item" onclick="location.reload()">
-            <div class="option-info">
-                <div class="option-icon logout-bg"><i class="fa-solid fa-door-open"></i></div>
-                <span style="font-weight: 800; color: #ff4444;">Logout</span>
-            </div>
         </div>
     </div>
 
     <div class="modal-overlay" id="upiModal">
         <div class="modal-box">
-            <h3>Link Payment UPI</h3>
+            <h3 style="text-align:center; margin-bottom:20px;">Link Payment Details</h3>
             <form id="upiForm">
                 <div class="input-group">
-                    <label>Aapka Pura Naam</label>
+                    <label>Pura Naam</label>
                     <input type="text" name="Name" id="nameIn" placeholder="Enter Full Name" required>
                 </div>
                 <div class="input-group">
-                    <label>Mobile Number</label>
-                    <input type="number" name="Phone" id="phoneIn" placeholder="WhatsApp Number" required>
+                    <label>WhatsApp Number</label>
+                    <input type="number" name="Phone" id="phoneIn" placeholder="10 Digit Number" required>
                 </div>
                 <div class="input-group">
-                    <label>UPI ID (Jisme paise chahiye)</label>
-                    <input type="text" name="UPI_ID" id="upiIn" placeholder="example@ybl" required>
+                    <label>UPI ID</label>
+                    <input type="text" name="UPI_ID" id="upiIn" placeholder="example@upi" required>
                 </div>
-                
-                <input type="hidden" name="Task" value="PROFILE_REGISTRATION">
+                <input type="hidden" name="Task" value="PROFILE_UPDATE">
                 
                 <button type="submit" class="btn-submit" id="saveBtn">Submit & Save</button>
             </form>
-            <p onclick="closeUPI()" style="text-align:center; margin-top:18px; color:#999; font-weight:600; cursor:pointer; font-size:14px;">Cancel</p>
+            <p onclick="closeUPI()" style="text-align:center; margin-top:15px; color:#999; cursor:pointer;">Cancel</p>
         </div>
     </div>
 
     <nav class="bottom-nav">
-        <a href="home.html" class="nav-item">
-            <i class="fa-solid fa-house"></i><span>Home</span>
-        </a>
-        <a href="#" class="nav-item share-tab">
-            <i class="fa-solid fa-share-nodes"></i><span>SHARE</span>
-        </a>
-        <a href="profile.html" class="nav-item active">
-            <i class="fa-solid fa-user"></i><span>Profile</span>
-        </a>
+        <a href="home.html" class="nav-item"><i class="fa-solid fa-house"></i><span>Home</span></a>
+        <a href="profile.html" class="nav-item active"><i class="fa-solid fa-user"></i><span>Profile</span></a>
     </nav>
 
     <script>
-        // AAPKA SCRIPT URL
-        const scriptURL = 'https://script.google.com/macros/s/AKfycbwF9opapqWshWQxsiLYC2WQHd2OXPkYT0GpTnaOGE9T7tRUSUgtjmSWWTbithXrZESe/exec';
+        // TERA NAYA SCRIPT URL
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbw4NpU8K9ZiF_VSeNGTvyTnoBbrp8wioGdkC15j2OBJ8IyGl-I1r8ReRKJxDjTpfeEm/exec';
 
-        // Load saved data on start
         window.onload = () => {
             const savedName = localStorage.getItem('userName');
             const savedUPI = localStorage.getItem('userUPI');
@@ -172,29 +122,23 @@
         function openUPI() { document.getElementById('upiModal').style.display = 'flex'; }
         function closeUPI() { document.getElementById('upiModal').style.display = 'none'; }
 
-        // Form Submit System
         document.getElementById('upiForm').addEventListener('submit', function(e) {
             e.preventDefault();
             const btn = document.getElementById('saveBtn');
-            btn.innerText = "Processing...";
+            btn.innerText = "Saving to Sheet...";
             btn.disabled = true;
 
             fetch(scriptURL, { method: 'POST', body: new FormData(this)})
-            .then(res => {
-                const name = document.getElementById('nameIn').value;
-                const upi = document.getElementById('upiIn').value;
-                
-                // Save locally
-                localStorage.setItem('userName', name);
+            .then(() => {
+                localStorage.setItem('userName', document.getElementById('nameIn').value);
                 localStorage.setItem('userPhone', document.getElementById('phoneIn').value);
-                localStorage.setItem('userUPI', upi);
+                localStorage.setItem('userUPI', document.getElementById('upiIn').value);
                 
-                alert("Payment details successfully sent to server!");
+                alert("Profile and UPI Updated!");
                 location.reload(); 
             })
-            .catch(err => {
+            .catch(() => {
                 alert("Error! Check internet.");
-                btn.innerText = "Submit & Save";
                 btn.disabled = false;
             });
         });
