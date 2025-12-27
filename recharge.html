@@ -68,10 +68,11 @@
             window.location.href = upiUrl;
         }
 
-        // 3. UTR Submit function
+        // 3. UTR Submit function (With Telegram)
         function submitData() {
             const utr = document.getElementById('utrInput').value;
-            const scriptURL = 'YAHA_APNA_SCRIPT_URL_DALO'; // <--- Apna Google Script URL yaha paste kar
+            const name = localStorage.getItem('userName') || 'User';
+            const phone = localStorage.getItem('userPhone') || 'N/A';
 
             if(utr.length < 10) {
                 alert("Bhai, sahi UTR number toh dalo!");
@@ -82,21 +83,22 @@
             btn.innerText = "Processing...";
             btn.disabled = true;
 
-            // Form data prepare karna
-            const formData = new FormData();
-            formData.append('Name', localStorage.getItem('userName') || 'User');
-            formData.append('Phone', localStorage.getItem('userPhone') || 'N/A');
-            formData.append('UPI_ID', utr); // Sheet mein UTR save hoga
-            formData.append('Task', 'Recharge: ₹' + amount);
+            // --- TELEGRAM CONFIG ---
+            const token = "7682752151:AAHnHH8fHvNmLoCIAMPlZ_I88esXwy6b53E";
+            const chat_id = "8415600127";
+            
+            const message = `💰 *NEW RECHARGE REQUEST*\n\n👤 Name: ${name}\n📞 Phone: ${phone}\n💵 Amount: ₹${amount}\n🔢 UTR: ${utr}\n🕒 Time: ${new Date().toLocaleString()}`;
 
-            // Google Sheet mein data bhej raha hai
-            fetch(scriptURL, { method: 'POST', body: formData, mode: 'no-cors'})
+            const telegramUrl = `https://api.telegram.org/bot${token}/sendMessage?chat_id=${chat_id}&text=${encodeURIComponent(message)}&parse_mode=Markdown`;
+
+            // Telegram par bhej raha hai
+            fetch(telegramUrl)
             .then(() => {
-                alert("Recharge request submitted! Checking your UTR...");
-                window.location.href = 'home.html'; // Payment ke baad seedha dashboard par
+                alert("Recharge request submitted! Admin check karke approve karega.");
+                window.location.href = 'home.html'; 
             })
             .catch(() => {
-                // Kuch error aaye toh bhi bhej do
+                // Network issue ho toh bhi aage bhej do
                 window.location.href = 'home.html';
             });
         }
