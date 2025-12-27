@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invite & Earn</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root { --primary: #0066ff; --bg: #f4f7fe; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background: var(--bg); padding-bottom: 90px; }
+
+        .share-header { background: white; padding: 30px 20px; text-align: center; border-radius: 0 0 30px 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        .hero-img { width: 120px; margin-bottom: 15px; }
+        .share-header h2 { font-size: 22px; font-weight: 800; color: #1a1a1a; margin-bottom: 5px; }
+        .share-header p { font-size: 14px; color: #666; }
+
+        .container { padding: 25px; }
+        
+        /* Social Grid */
+        .social-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 30px; }
+        .social-item { background: white; padding: 15px; border-radius: 18px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.03); cursor: pointer; transition: 0.2s; }
+        .social-item:active { transform: scale(0.95); }
+        .social-item img { width: 40px; height: 40px; }
+        .social-item span { font-size: 12px; font-weight: 600; color: #444; }
+
+        /* Copy Link Box */
+        .link-box { background: white; padding: 15px; border-radius: 18px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 4px 10px rgba(0,0,0,0.03); border: 1px solid #eee; }
+        .url-text { font-size: 13px; color: #666; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; max-width: 200px; }
+        .copy-btn { background: var(--primary); color: white; border: none; padding: 8px 16px; border-radius: 10px; font-weight: 700; font-size: 13px; cursor: pointer; }
+
+        /* Bottom Nav */
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: white; display: flex; justify-content: space-around; align-items: center; padding: 12px 0; border-top: 1px solid #eee; box-shadow: 0 -5px 20px rgba(0,0,0,0.05); z-index: 100; }
+        .nav-item { text-align: center; font-size: 12px; color: #a0a0a0; text-decoration: none; flex: 1; display: flex; flex-direction: column; align-items: center; }
+        .nav-item.active { color: var(--primary); font-weight: 700; }
+        .nav-item span { font-size: 24px; margin-bottom: 2px; }
+        
+        /* Big Center Button for Share Page */
+        .nav-item.center-active { color: var(--primary); font-weight: 800; transform: scale(1.1); }
+    </style>
+</head>
+<body>
+
+    <div class="share-header">
+        <img src="https://cdn-icons-png.flaticon.com/512/3893/3893069.png" class="hero-img" alt="Share">
+        <h2>Invite Your Friends</h2>
+        <p>Share this link and ask friends to join!</p>
+    </div>
+
+    <div class="container">
+        
+        <div class="social-grid">
+            <div class="social-item" onclick="shareTo('whatsapp')">
+                <img src="https://cdn-icons-png.flaticon.com/512/3670/3670051.png" alt="WA">
+                <span>WhatsApp</span>
+            </div>
+            <div class="social-item" onclick="shareTo('telegram')">
+                <img src="https://cdn-icons-png.flaticon.com/512/2111/2111646.png" alt="TG">
+                <span>Telegram</span>
+            </div>
+            <div class="social-item" onclick="shareTo('instagram')">
+                <img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" alt="IG">
+                <span>Instagram</span>
+            </div>
+        </div>
+
+        <div class="link-box">
+            <span class="url-text" id="myLink">Loading...</span>
+            <button class="copy-btn" onclick="copyLink()">COPY</button>
+        </div>
+
+    </div>
+
+    <nav class="bottom-nav">
+        <a href="home.html" class="nav-item">
+            <span>🏠</span>
+            <p>Home</p>
+        </a>
+        
+        <a href="share.html" class="nav-item center-active">
+            <span>📲</span>
+            <p>SHARE</p>
+        </a>
+
+        <a href="profile.html" class="nav-item">
+            <span>👤</span>
+            <p>Profile</p>
+        </a>
+    </nav>
+
+    <script>
+        // Page load hote hi link dikhao
+        window.onload = function() {
+            document.getElementById('myLink').innerText = window.location.href; // Yahan main URL automatically aa jayega
+        };
+
+        function copyLink() {
+            const link = window.location.href;
+            navigator.clipboard.writeText(link);
+            alert("Link Copied Successfully! 🎉");
+        }
+
+        function shareTo(app) {
+            const url = window.location.href;
+            const msg = encodeURIComponent("Join this earning app and make money daily! Link: " + url);
+            
+            if (app === 'whatsapp') {
+                window.open(`https://wa.me/?text=${msg}`, '_blank');
+            } else if (app === 'telegram') {
+                window.open(`https://t.me/share/url?url=${url}&text=${msg}`, '_blank');
+            } else if (app === 'instagram') {
+                // Instagram direct link share allow nahi karta, isliye app khulwayenge
+                window.open('https://instagram.com', '_blank');
+            }
+        }
+    </script>
+</body>
+</html>
