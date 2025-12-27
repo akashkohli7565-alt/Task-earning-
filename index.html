@@ -3,46 +3,107 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Demat Task</title>
+    <title>Login & Register - Earn Money</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: sans-serif; }
-        body { 
-            background: #000 url('https://vader-prod.s3.amazonaws.com/1684338573-2023-mahindra-scorpio-classic-front-quarter-6464f78696884.jpg') no-repeat center top;
-            background-size: contain; height: 100vh; display: flex; justify-content: center; align-items: flex-end;
-        }
-        .container { 
-            background: white; width: 100%; max-width: 450px; border-radius: 30px 30px 0 0; 
-            padding: 30px 20px; box-shadow: 0 -5px 20px rgba(0,0,0,0.3); text-align: center;
-        }
-        .tabs { display: flex; justify-content: space-around; margin-bottom: 20px; border-bottom: 1px solid #eee; }
-        .tab { padding: 10px; cursor: pointer; color: #888; font-weight: bold; }
-        .tab.active { color: black; border-bottom: 3px solid #333; }
-        .input-group { background: #f2f2f2; border-radius: 15px; display: flex; align-items: center; padding: 12px 15px; margin-bottom: 12px; }
-        .input-group span { border-right: 1px solid #ccc; padding-right: 10px; margin-right: 10px; font-weight: bold; }
-        input { border: none; background: transparent; width: 100%; outline: none; font-size: 16px; }
-        .main-btn { background: #333; color: white; width: 100%; padding: 15px; border-radius: 30px; border: none; font-weight: bold; margin-top: 10px; }
+        :root { --primary: #0066ff; --bg: #f4f7fe; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background: var(--bg); display: flex; align-items: center; justify-content: center; height: 100vh; padding: 20px; }
+        
+        .auth-container { background: white; width: 100%; max-width: 400px; padding: 35px 25px; border-radius: 30px; box-shadow: 0 15px 35px rgba(0,0,0,0.08); text-align: center; }
+        .logo { font-size: 32px; margin-bottom: 10px; display: block; }
+        h2 { font-size: 24px; font-weight: 700; color: #1a1a1a; margin-bottom: 8px; }
+        p { font-size: 14px; color: #777; margin-bottom: 25px; }
+
+        .form-group { margin-bottom: 18px; text-align: left; }
+        .form-group label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; color: #555; }
+        .form-group input { width: 100%; padding: 14px; border: 1.5px solid #ebebeb; border-radius: 14px; font-size: 15px; outline: none; transition: 0.3s; background: #fafafa; }
+        .form-group input:focus { border-color: var(--primary); background: white; box-shadow: 0 0 0 4px rgba(0,102,255,0.05); }
+
+        .main-btn { width: 100%; background: var(--primary); color: white; border: none; padding: 16px; border-radius: 14px; font-size: 16px; font-weight: 700; cursor: pointer; margin-top: 10px; transition: 0.3s; }
+        .main-btn:active { transform: scale(0.97); }
+
+        .toggle-text { margin-top: 25px; font-size: 14px; color: #666; }
+        .toggle-text span { color: var(--primary); font-weight: 700; cursor: pointer; text-decoration: underline; }
+        
+        /* Hidden class for switching */
+        .hidden { display: none; }
     </style>
 </head>
 <body>
-<div class="container">
-    <div class="tabs">
-        <div class="tab active" onclick="location.reload()">Register</div>
-        <div class="tab" onclick="alert('Login logic same as register')">Login</div>
+
+    <div class="auth-container">
+        <span class="logo">💰</span>
+        <h2 id="title">Create Account</h2>
+        <p id="subtitle">Start your earning journey with us!</p>
+
+        <div id="reg-only" class="form-group">
+            <label>Full Name</label>
+            <input type="text" id="name" placeholder="Enter your full name">
+        </div>
+
+        <div class="form-group">
+            <label>Mobile Number</label>
+            <input type="tel" id="phone" placeholder="Enter 10 digit number">
+        </div>
+
+        <div class="form-group">
+            <label>Password</label>
+            <input type="password" id="pass" placeholder="Enter password">
+        </div>
+
+        <button class="main-btn" onclick="processAuth()" id="btn-text">Register Now</button>
+
+        <p class="toggle-text" id="toggle-msg">
+            Already have an account? <span onclick="switchMode()">Login</span>
+        </p>
     </div>
-    <div class="input-group"><span>+91</span><input type="number" id="phone" placeholder="Enter Phone Number"></div>
-    <div class="input-group"><input type="password" id="pass" placeholder="Please new password"></div>
-    <div class="input-group"><input type="password" placeholder="Please new password again"></div>
-    <div class="input-group"><input type="password" placeholder="Enter Withdrawal Password"></div>
-    <div class="input-group"><input type="text" value="dd3f2eb7" readonly style="color:#999"></div>
-    <button class="main-btn" onclick="register()">Register</button>
-</div>
-<script>
-    function register() {
-        const p = document.getElementById('phone').value;
-        if(p.length < 10) return alert("Sahi number dalo");
-        localStorage.setItem('userPhone', p);
-        window.location.href = 'home.html';
-    }
-</script>
+
+    <script>
+        let mode = 'register'; // Default mode
+
+        function switchMode() {
+            const title = document.getElementById('title');
+            const subtitle = document.getElementById('subtitle');
+            const regField = document.getElementById('reg-only');
+            const btnText = document.getElementById('btn-text');
+            const toggleMsg = document.getElementById('toggle-msg');
+
+            if (mode === 'register') {
+                mode = 'login';
+                title.innerText = "Welcome Back";
+                subtitle.innerText = "Login to access your dashboard";
+                regField.classList.add('hidden');
+                btnText.innerText = "Login Now";
+                toggleMsg.innerHTML = "Don't have an account? <span onclick='switchMode()'>Register</span>";
+            } else {
+                mode = 'register';
+                title.innerText = "Create Account";
+                subtitle.innerText = "Start your earning journey with us!";
+                regField.classList.remove('hidden');
+                btnText.innerText = "Register Now";
+                toggleMsg.innerHTML = "Already have an account? <span onclick='switchMode()'>Login</span>";
+            }
+        }
+
+        function processAuth() {
+            const phone = document.getElementById('phone').value;
+            const password = document.getElementById('pass').value;
+
+            // Simple validation
+            if (phone.length < 10) {
+                alert("Please enter a valid mobile number!");
+                return;
+            }
+            if (password.length < 4) {
+                alert("Password must be at least 4 characters!");
+                return;
+            }
+
+            // Success: Redirect to home.html
+            // Yahan se bnda seedha dashboard par jayega
+            window.location.href = "home.html";
+        }
+    </script>
 </body>
 </html>
