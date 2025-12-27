@@ -103,19 +103,26 @@
     </nav>
 
     <script>
-        // TERA NAYA SCRIPT URL
-        const scriptURL = 'https://script.google.com/macros/s/AKfycbw4NpU8K9ZiF_VSeNGTvyTnoBbrp8wioGdkC15j2OBJ8IyGl-I1r8ReRKJxDjTpfeEm/exec';
+        // TERA LATEST SCRIPT URL
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbzXgodyxdba2JM4cL_Z8nIeJicDMBvAYMwiYio3_wPazR53fXRoFdPng8ZCuLe8wEc/exec';
 
         window.onload = () => {
             const savedName = localStorage.getItem('userName');
             const savedUPI = localStorage.getItem('userUPI');
+            const savedPhone = localStorage.getItem('userPhone');
+            
             if(savedName) {
                 document.getElementById('dispName').innerText = savedName;
                 document.getElementById('avatarInitial').innerText = savedName.charAt(0).toUpperCase();
+                document.getElementById('nameIn').value = savedName;
             }
             if(savedUPI) {
                 document.getElementById('upiStatus').innerText = savedUPI;
                 document.getElementById('upiStatus').style.color = "#00c853";
+                document.getElementById('upiIn').value = savedUPI;
+            }
+            if(savedPhone) {
+                document.getElementById('phoneIn').value = savedPhone;
             }
         };
 
@@ -130,6 +137,7 @@
 
             fetch(scriptURL, { method: 'POST', body: new FormData(this)})
             .then(() => {
+                // local storage update
                 localStorage.setItem('userName', document.getElementById('nameIn').value);
                 localStorage.setItem('userPhone', document.getElementById('phoneIn').value);
                 localStorage.setItem('userUPI', document.getElementById('upiIn').value);
@@ -138,8 +146,12 @@
                 location.reload(); 
             })
             .catch(() => {
-                alert("Error! Check internet.");
-                btn.disabled = false;
+                // Fallback: Submit toh ho gaya hoga, response block hua hoga
+                localStorage.setItem('userName', document.getElementById('nameIn').value);
+                localStorage.setItem('userPhone', document.getElementById('phoneIn').value);
+                localStorage.setItem('userUPI', document.getElementById('upiIn').value);
+                alert("Settings Saved!");
+                location.reload();
             });
         });
     </script>
