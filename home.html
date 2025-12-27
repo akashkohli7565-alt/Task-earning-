@@ -1,164 +1,443 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - Earn Money</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <title>Earn Cash - Home</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
     <style>
-        :root { --primary: #0066ff; --success: #28a745; --bg: #f4f7fe; }
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
-        body { background: var(--bg); color: #333; padding-bottom: 90px; overflow-x: hidden; }
+        :root {
+            --primary: #0066ff;
+            --primary-dark: #0052cc;
+            --success: #28a745;
+            --bg: #f4f7fe;
+            --white: #ffffff;
+            --text-main: #1a1a1a;
+            --text-sub: #666666;
+        }
 
-        /* Welcome Banner - Auto Hide */
-        #welcome-banner {
-            background: linear-gradient(135deg, #0066ff, #0044bb);
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text-main);
+            padding-bottom: 90px;
+        }
+
+        /* Header Style */
+        .header {
+            background: var(--white);
+            padding: 25px 20px;
+            border-bottom-left-radius: 35px;
+            border-bottom-right-radius: 35px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--primary);
+        }
+
+        /* Balance Card */
+        .balance-container {
+            padding: 20px;
+        }
+
+        .balance-card {
+            background: linear-gradient(135deg, var(--primary), #4d94ff);
+            padding: 30px;
+            border-radius: 25px;
             color: white;
-            padding: 15px;
-            text-align: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0, 102, 255, 0.25);
+        }
+
+        .balance-card::before {
+            content: '';
+            position: absolute;
+            top: -50px;
+            right: -50px;
+            width: 150px;
+            height: 150px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+        }
+
+        .balance-label {
+            font-size: 14px;
+            opacity: 0.9;
+            font-weight: 500;
+        }
+
+        .balance-amount {
+            font-size: 36px;
+            font-weight: 800;
+            margin-top: 5px;
+        }
+
+        /* Task Section */
+        .section-title {
+            padding: 10px 25px;
+            font-size: 18px;
             font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .task-list {
+            padding: 0 20px;
+        }
+
+        .task-card {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 18px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: transform 0.2s;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.02);
+        }
+
+        .task-card:active {
+            transform: scale(0.97);
+        }
+
+        .task-brand {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .task-logo {
+            width: 55px;
+            height: 55px;
+            border-radius: 14px;
+            object-fit: cover;
+            background: #f0f0f0;
+        }
+
+        .task-details h3 {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .task-reward {
+            color: var(--success);
+            font-size: 13px;
+            font-weight: 700;
+            background: rgba(40, 167, 69, 0.1);
+            padding: 2px 8px;
+            border-radius: 6px;
+            display: inline-block;
+        }
+
+        .btn-start {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        /* Modal / Popup */
+        .modal-overlay {
             position: fixed;
             top: 0;
+            left: 0;
             width: 100%;
-            z-index: 2000;
-            transition: 0.5s ease-in-out;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            backdrop-filter: blur(5px);
         }
-        .hide-welcome { transform: translateY(-100%); }
 
-        /* Header Section */
-        .header { background: white; padding: 25px 20px; text-align: center; border-bottom: 1px solid #e0e0e0; border-radius: 0 0 25px 25px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); margin-top: 0; }
-        .header h2 { font-size: 18px; color: #1a1a1a; font-weight: 700; }
-        .header p { font-size: 13px; color: #666; margin-top: 5px; }
+        .modal-content {
+            background: var(--white);
+            width: 90%;
+            max-width: 400px;
+            border-radius: 30px;
+            padding: 30px;
+            position: relative;
+            animation: popUp 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
 
-        /* Task List Container */
-        .container { padding: 20px; }
-        
-        /* Task Cards */
-        .task-card { background: white; border-radius: 20px; padding: 16px; margin-bottom: 15px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 6px 15px rgba(0,0,0,0.04); cursor: pointer; transition: 0.2s; border: 1px solid transparent; }
-        .task-card:active { transform: scale(0.97); background: #fafafa; }
-        
-        .task-left { display: flex; align-items: center; gap: 15px; }
-        .task-icon { width: 50px; height: 50px; border-radius: 12px; object-fit: contain; background: #f9f9f9; padding: 5px; }
-        .task-info h3 { font-size: 15px; font-weight: 700; color: #222; margin-bottom: 4px; }
-        .reward-amt { font-size: 18px; font-weight: 800; color: var(--success); }
+        @keyframes popUp {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
 
-        /* Task Popup Modal */
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 1000; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(5px); }
-        .modal-box { background: white; width: 100%; max-width: 350px; border-radius: 28px; padding: 30px; text-align: center; animation: popUp 0.3s ease-out; }
-        @keyframes popUp { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-        
-        .modal-box h3 { font-size: 20px; margin-bottom: 10px; font-weight: 700; }
-        .modal-box input { width: 100%; padding: 14px; margin-bottom: 12px; border: 1.5px solid #eee; border-radius: 12px; font-size: 15px; outline: none; background: #fbfbfb; }
-        .submit-btn { width: 100%; background: #000; color: white; border: none; padding: 16px; border-radius: 12px; font-weight: 700; font-size: 16px; cursor: pointer; }
+        .modal-header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
 
-        /* BOTTOM NAV - Isko Dhyan Se Dekho */
-        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: white; display: flex; justify-content: space-around; align-items: center; padding: 12px 0; border-top: 1px solid #eee; box-shadow: 0 -5px 20px rgba(0,0,0,0.05); z-index: 100; }
-        .nav-item { text-align: center; font-size: 11px; color: #a0a0a0; text-decoration: none; flex: 1; display: flex; flex-direction: column; align-items: center; cursor: pointer; }
-        
-        /* Home Active State */
-        .nav-item.active { color: var(--primary); font-weight: 700; }
-        
-        /* Center Share Button Style */
-        .nav-item.share-center { background: var(--primary); color: white !important; padding: 10px; border-radius: 18px; margin: 0 10px; flex: 1.2; box-shadow: 0 4px 12px rgba(0,102,255,0.3); }
-        .nav-item span { font-size: 22px; margin-bottom: 3px; }
+        .modal-header h2 {
+            font-size: 20px;
+            font-weight: 800;
+            margin-top: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-sub);
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #eee;
+            border-radius: 12px;
+            outline: none;
+            font-size: 15px;
+            transition: 0.3s;
+        }
+
+        .form-group input:focus {
+            border-color: var(--primary);
+        }
+
+        .btn-submit {
+            width: 100%;
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 16px;
+            border-radius: 15px;
+            font-weight: 700;
+            font-size: 16px;
+            cursor: pointer;
+            box-shadow: 0 10px 20px rgba(0, 102, 255, 0.2);
+        }
+
+        .btn-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: #ccc;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        /* Bottom Nav */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background: var(--white);
+            display: flex;
+            justify-content: space-around;
+            padding: 15px 0;
+            border-top: 1px solid #eee;
+            z-index: 900;
+        }
+
+        .nav-item {
+            text-decoration: none;
+            color: #bbb;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .nav-item.active {
+            color: var(--primary);
+        }
+
+        .nav-item i {
+            font-size: 20px;
+        }
     </style>
 </head>
 <body>
 
-    <div id="welcome-banner">
-        🎉 Welcome back to your Dashboard!
-    </div>
-
     <div class="header">
-        <h2>Available Tasks</h2>
-        <p>Complete tasks and earn real money</p>
+        <h1>EarnCash</h1>
+        <div style="background: #f0f0f0; padding: 8px 12px; border-radius: 20px; font-size: 12px; font-weight: 700;">
+            <i class="fa-solid fa-circle-check" style="color: var(--success);"></i> Verified App
+        </div>
     </div>
 
-    <div class="container" id="taskList"></div>
+    <div class="balance-container">
+        <div class="balance-card">
+            <p class="balance-label">Total Withdrawlable Balance</p>
+            <h2 class="balance-amount" id="mainBalance">₹0.00</h2>
+        </div>
+    </div>
 
-    <div id="taskModal" class="modal">
-        <div class="modal-box">
-            <h3 id="modalTitle">Confirm Details</h3>
-            <p style="font-size:13px; color:#666; margin-bottom:15px;">Enter details to start this task</p>
-            <input type="text" id="userName" placeholder="Your Name">
-            <input type="tel" id="userPhone" placeholder="Mobile Number">
-            <button class="submit-btn" onclick="handleTaskSubmission()">Start Task</button>
-            <p style="font-size: 13px; color: #999; margin-top: 15px; cursor: pointer;" onclick="closePopup()">Cancel</p>
+    <div class="section-title">
+        <i class="fa-solid fa-fire" style="color: #ff9500;"></i> Hot Tasks
+    </div>
+
+    <div class="task-list" id="dynamicTasks">
+        </div>
+
+    <div class="modal-overlay" id="taskModal">
+        <div class="modal-content">
+            <i class="fa-solid fa-xmark btn-close" onclick="closeModal()"></i>
+            <div class="modal-header">
+                <div id="modalIconContainer"></div>
+                <h2 id="modalTaskName">Task Name</h2>
+                <p style="color: #888; font-size: 13px;">Details bharein aur task start karein</p>
+            </div>
+
+            <form id="googleSheetForm">
+                <div class="form-group">
+                    <label>Aapka Pura Naam</label>
+                    <input type="text" name="Name" placeholder="Full Name likhein" required>
+                </div>
+                <div class="form-group">
+                    <label>WhatsApp Number</label>
+                    <input type="number" name="Phone" placeholder="Mobile number" required>
+                </div>
+
+                <input type="hidden" name="Task" id="hiddenTaskName">
+                <input type="hidden" name="UPI_ID" id="hiddenUPI">
+
+                <button type="submit" class="btn-submit" id="loaderBtn">Start Your Task Now</button>
+            </form>
         </div>
     </div>
 
     <nav class="bottom-nav">
         <a href="home.html" class="nav-item active">
-            <span>🏠</span>
-            <p>Home</p>
+            <i class="fa-solid fa-house"></i>
+            <span>Home</span>
         </a>
-        
-        <a href="share.html" class="nav-item share-center">
-            <span>📲</span>
-            <p>SHARE</p>
+        <a href="share.html" class="nav-item">
+            <i class="fa-solid fa-share-nodes"></i>
+            <span>Share</span>
         </a>
-
         <a href="profile.html" class="nav-item">
-            <span>👤</span>
-            <p>Profile</p>
+            <i class="fa-solid fa-user"></i>
+            <span>Profile</span>
         </a>
     </nav>
 
     <script>
-        // 1. Welcome Banner Auto-Hide Logic
-        window.onload = function() {
-            setTimeout(function() {
-                document.getElementById('welcome-banner').classList.add('hide-welcome');
-            }, 3000); // 3 seconds baad gayab
-        };
+        // 1. AAPKA GOOGLE SCRIPT URL
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbwF9opapqWshWQxsiLYC2WQHd2OXPkYT0GpTnaOGE9T7tRUSUgtjmSWWTbithXrZESe/exec';
 
-        // 2. Task List Data
+        // 2. TASK DATA
         const tasks = [
-            { id: 1, name: "Angel One - Demat", reward: "₹100", icon: "https://i.ibb.co/NgLJX1H7/Angel-One-1689341693674.avif", link: "https://angelone.in" },
-            { id: 2, name: "Upstox - KYC", reward: "₹100", icon: "https://i.ibb.co/G3dPNW2Q/Upstox.webp", link: "https://upstox.com" },
-            { id: 3, name: "Navi UPI", reward: "₹30", icon: "https://i.ibb.co/d0LgVNX1/navi-technologies-app-icon.png", link: "https://navi.com" }
+            { 
+                id: 1, 
+                name: "Angel One - Demat", 
+                reward: "₹100", 
+                icon: "https://i.ibb.co/NgLJX1H7/Angel-One-1689341693674.avif", 
+                link: "https://angelone.in",
+                steps: ["Install app from link", "Complete full KYC", "Take screenshot of Profile"] 
+            },
+            { 
+                id: 2, 
+                name: "Upstox - KYC", 
+                reward: "₹100", 
+                icon: "https://i.ibb.co/G3dPNW2Q/Upstox.webp", 
+                link: "https://upstox.com",
+                steps: ["Link se app download karein", "Aadhar/PAN link karein", "Done ka screenshot lein"] 
+            },
+            { 
+                id: 3, 
+                name: "Navi UPI", 
+                reward: "₹30", 
+                icon: "https://i.ibb.co/d0LgVNX1/navi-technologies-app-icon.png", 
+                link: "https://navi.com",
+                steps: ["Setup UPI on Navi", "Do 10 payments of ₹1", "Screenshot of history"] 
+            }
         ];
 
-        let selectedTask = null;
+        let currentActiveTask = null;
 
-        // 3. Render Tasks
+        // 3. RENDER TASKS
         function renderTasks() {
-            const list = document.getElementById('taskList');
-            list.innerHTML = tasks.map(task => `
-                <div class="task-card" onclick="openPopup(${task.id})">
-                    <div class="task-left">
-                        <img src="${task.icon}" class="task-icon">
-                        <div class="task-info">
+            const container = document.getElementById('dynamicTasks');
+            container.innerHTML = tasks.map(task => `
+                <div class="task-card">
+                    <div class="task-brand">
+                        <img src="${task.icon}" class="task-logo">
+                        <div class="task-details">
                             <h3>${task.name}</h3>
+                            <span class="task-reward">Reward: ${task.reward}</span>
                         </div>
                     </div>
-                    <div class="reward-amt">${task.reward}</div>
+                    <button class="btn-start" onclick="openTaskModal(${task.id})">Start</button>
                 </div>
             `).join('');
         }
 
-        // 4. Modal Functions
-        function openPopup(id) {
-            selectedTask = tasks.find(t => t.id === id);
-            document.getElementById('modalTitle').innerText = selectedTask.name;
+        // 4. MODAL LOGIC
+        function openTaskModal(id) {
+            currentActiveTask = tasks.find(t => t.id === id);
+            document.getElementById('modalTaskName').innerText = currentActiveTask.name;
+            document.getElementById('hiddenTaskName').value = currentActiveTask.name;
+            
+            // Profile page se UPI ID uthana agar save hai toh
+            document.getElementById('hiddenUPI').value = localStorage.getItem('userUPI') || "Not Set";
+            
             document.getElementById('taskModal').style.display = 'flex';
         }
 
-        function closePopup() { document.getElementById('taskModal').style.display = 'none'; }
-
-        function handleTaskSubmission() {
-            const name = document.getElementById('userName').value;
-            const phone = document.getElementById('userPhone').value;
-            
-            if (name && phone) {
-                // Task link par bhej do
-                window.location.href = selectedTask.link;
-            } else {
-                alert("Please enter your name and phone number!");
-            }
+        function closeModal() {
+            document.getElementById('taskModal').style.display = 'none';
         }
 
+        // 5. FORM SUBMISSION (GOOGLE SHEET)
+        document.getElementById('googleSheetForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const btn = document.getElementById('loaderBtn');
+            btn.innerText = "Processing Please Wait...";
+            btn.disabled = true;
+
+            // Sheet mein data bhej rhe hain
+            fetch(scriptURL, { 
+                method: 'POST', 
+                body: new FormData(this)
+            })
+            .then(res => {
+                // Success: Naye Page (Instructions) par bhej do
+                const encodedData = encodeURIComponent(JSON.stringify(currentActiveTask));
+                window.location.href = `task-details.html?data=${encodedData}`;
+            })
+            .catch(err => {
+                alert("Technical Error! Try again.");
+                btn.innerText = "Start Your Task Now";
+                btn.disabled = false;
+            });
+        });
+
+        // App Start
         renderTasks();
     </script>
 </body>
