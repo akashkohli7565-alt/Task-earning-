@@ -1,160 +1,150 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Profile</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <title>Profile - EarnCash</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root { --primary: #0066ff; --bg: #f4f7fe; --danger: #ff3b30; }
+        :root { --primary: #0066ff; --bg: #f8f9fd; --white: #ffffff; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
-        body { background: var(--bg); padding-bottom: 100px; }
+        body { background: var(--bg); padding-bottom: 100px; color: #333; }
 
-        /* Profile Header */
-        .profile-header { background: white; padding: 40px 20px 30px; text-align: center; border-radius: 0 0 35px 35px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
-        .avatar { width: 70px; height: 70px; background: var(--primary); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 30px; font-weight: 700; margin: 0 auto 15px; }
-        #display-name { font-size: 22px; font-weight: 800; color: #1a1a1a; }
-        .user-tag { font-size: 13px; color: #666; margin-top: 5px; }
+        /* Profile Top Section */
+        .profile-top { background: var(--white); padding: 40px 20px; text-align: center; border-bottom-left-radius: 40px; border-bottom-right-radius: 40px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); }
+        .user-avatar { width: 90px; height: 90px; background: #eef4ff; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px; border: 3px solid var(--primary); }
+        .user-avatar i { font-size: 40px; color: var(--primary); }
+        .user-info h2 { font-size: 22px; font-weight: 800; margin-bottom: 5px; }
+        .user-info p { font-size: 14px; color: #777; font-weight: 600; }
 
-        .container { padding: 20px; }
+        /* Form Card */
+        .form-container { padding: 25px 20px; }
+        .card { background: var(--white); padding: 25px; border-radius: 25px; box-shadow: 0 5px 20px rgba(0,0,0,0.03); border: 1px solid #f0f0f0; }
+        .card h3 { font-size: 18px; font-weight: 700; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+        .card h3 i { color: var(--primary); }
 
-        /* Earnings Card */
-        .earnings-card { background: linear-gradient(135deg, #1a1a1a, #444); color: white; padding: 25px; border-radius: 25px; margin-bottom: 20px; text-align: center; position: relative; overflow: hidden; }
-        .earnings-card p { font-size: 14px; opacity: 0.8; }
-        .earnings-card h2 { font-size: 36px; margin: 10px 0; font-weight: 800; }
+        /* Input Styles */
+        .input-box { margin-bottom: 18px; }
+        .input-box label { display: block; font-size: 13px; font-weight: 700; color: #555; margin-bottom: 8px; margin-left: 5px; }
+        .input-box input { width: 100%; padding: 15px; border: 2px solid #f0f0f0; border-radius: 15px; outline: none; font-size: 15px; font-weight: 500; transition: 0.3s; background: #fafafa; }
+        .input-box input:focus { border-color: var(--primary); background: #fff; box-shadow: 0 0 10px rgba(0,102,255,0.1); }
 
-        /* Withdrawal Section */
-        .withdraw-section { background: white; padding: 20px; border-radius: 20px; margin-bottom: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.02); }
-        .withdraw-section h3 { font-size: 16px; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
-        .min-info { font-size: 12px; color: var(--danger); font-weight: 600; margin-bottom: 15px; background: #fff5f5; padding: 5px 10px; border-radius: 5px; display: inline-block; }
-        
-        .withdraw-btn { width: 100%; background: #eee; color: #888; border: none; padding: 15px; border-radius: 12px; font-weight: 700; cursor: not-allowed; }
-        .withdraw-btn.active { background: var(--primary); color: white; cursor: pointer; }
+        /* Submit Button */
+        .submit-btn { width: 100%; background: var(--primary); color: white; border: none; padding: 16px; border-radius: 18px; font-weight: 800; font-size: 16px; cursor: pointer; transition: 0.3s; box-shadow: 0 10px 20px rgba(0,102,255,0.2); margin-top: 10px; }
+        .submit-btn:active { transform: scale(0.96); }
 
-        /* Input Columns */
-        .action-card { background: white; padding: 18px; border-radius: 20px; margin-bottom: 15px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; }
-        .action-info { display: flex; align-items: center; gap: 15px; }
-        .icon-box { width: 40px; height: 40px; background: #f0f4ff; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
-        .action-text b { font-size: 15px; display: block; }
-        .action-text span { font-size: 12px; color: #888; }
-
-        /* Bottom Nav */
-        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: white; display: flex; justify-content: space-around; align-items: center; padding: 12px 0; border-top: 1px solid #eee; z-index: 100; }
-        .nav-item { text-align: center; font-size: 11px; color: #a0a0a0; text-decoration: none; flex: 1; display: flex; flex-direction: column; align-items: center; }
-        .nav-item.active { color: var(--primary); font-weight: 700; }
-        .nav-item.share-center { background: var(--primary); color: white !important; padding: 10px; border-radius: 18px; margin: 0 10px; flex: 1.2; }
-        .nav-item span { font-size: 22px; margin-bottom: 2px; }
-
-        /* Simple Modal for UPI/Help */
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 2000; align-items: center; justify-content: center; padding: 20px; }
-        .modal-content { background: white; width: 100%; border-radius: 25px; padding: 25px; text-align: center; }
-        .modal-content input { width: 100%; padding: 15px; border: 1px solid #ddd; border-radius: 12px; margin: 15px 0; outline: none; }
-        .save-btn { background: var(--primary); color: white; border: none; padding: 15px 30px; border-radius: 12px; width: 100%; font-weight: 700; }
+        /* Bottom Navbar (Matching your Screenshot) */
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: var(--white); display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #eee; z-index: 100; }
+        .nav-item { text-decoration: none; color: #999; display: flex; flex-direction: column; align-items: center; gap: 5px; font-size: 11px; font-weight: 700; transition: 0.3s; }
+        .nav-item i { font-size: 20px; }
+        .nav-item.active { color: var(--primary); }
     </style>
 </head>
 <body>
 
-    <div class="profile-header">
-        <div class="avatar" id="avatar-letter">U</div>
-        <h2 id="display-name">User Name</h2>
-        <p class="user-tag">Verified Member</p>
-    </div>
-
-    <div class="container">
-        <div class="earnings-card">
-            <p>Total Balance</p>
-            <h2>₹0.00</h2>
-            <p>Keep completing tasks to earn more!</p>
+    <div class="profile-top">
+        <div class="user-avatar">
+            <i class="fa-solid fa-user-astronaut"></i>
         </div>
-
-        <div class="withdraw-section">
-            <h3><span>🏦</span> Withdrawal</h3>
-            <span class="min-info">⚠️ Minimum Withdrawal: ₹300</span>
-            <button class="withdraw-btn" id="withdrawBtn" onclick="checkWithdrawal()">Withdraw Funds</button>
-        </div>
-
-        <div class="action-card" onclick="openModal('upi')">
-            <div class="action-info">
-                <div class="icon-box">💳</div>
-                <div class="action-text">
-                    <b>Add UPI ID</b>
-                    <span id="upi-status">Not Linked</span>
-                </div>
-            </div>
-            <span>❯</span>
-        </div>
-
-        <div class="action-card" onclick="window.location.href='https://wa.me/YOURNUMBER'">
-            <div class="action-info">
-                <div class="icon-box">📞</div>
-                <div class="action-text">
-                    <b>Help & Support</b>
-                    <span>Contact us on WhatsApp</span>
-                </div>
-            </div>
-            <span>❯</span>
-        </div>
-
-        <div class="action-card logout" onclick="window.location.href='index.html'" style="margin-top: 30px; border: 1px solid #ffebeb;">
-            <div class="action-info">
-                <div class="icon-box" style="background: #fff0f0;">🚪</div>
-                <div class="action-text">
-                    <b style="color: var(--danger);">Logout</b>
-                </div>
-            </div>
+        <div class="user-info">
+            <h2 id="userNameDisplay">Naya User</h2>
+            <p id="userPhoneDisplay">KYC incomplete</p>
         </div>
     </div>
 
-    <div id="upiModal" class="modal">
-        <div class="modal-content">
-            <h3>Link UPI ID</h3>
-            <input type="text" id="upiInput" placeholder="example@ybl">
-            <button class="save-btn" onclick="saveUPI()">Save UPI ID</button>
-            <p onclick="closeModal()" style="margin-top: 15px; color: #888; cursor: pointer;">Cancel</p>
+    <div class="form-container">
+        <div class="card">
+            <h3><i class="fa-solid fa-wallet"></i> Payment Details</h3>
+            <form id="profileForm">
+                <div class="input-box">
+                    <label>Aapka Pura Naam</label>
+                    <input type="text" name="Name" id="nameInput" placeholder="Sahi naam likhein" required>
+                </div>
+                
+                <div class="input-box">
+                    <label>Mobile Number</label>
+                    <input type="number" name="Phone" id="phoneInput" placeholder="WhatsApp number" required>
+                </div>
+
+                <div class="input-box">
+                    <label>UPI ID (For Withdrawal)</label>
+                    <input type="text" name="UPI_ID" id="upiInput" placeholder="number@ybl ya example@upi" required>
+                </div>
+
+                <input type="hidden" name="Task" value="PROFILE_REGISTRATION">
+
+                <button type="submit" class="submit-btn" id="btnText">Save & Register</button>
+            </form>
         </div>
     </div>
 
     <nav class="bottom-nav">
-        <a href="home.html" class="nav-item"><span>🏠</span><p>Home</p></a>
-        <a href="share.html" class="nav-item share-center"><span>📲</span><p>SHARE</p></a>
-        <a href="profile.html" class="nav-item active"><span>👤</span><p>Profile</p></a>
+        <a href="home.html" class="nav-item">
+            <i class="fa-solid fa-house"></i>
+            <span>Home</span>
+        </a>
+        <a href="#" class="nav-item" style="background: #0066ff; color: white; padding: 10px 20px; border-radius: 15px; margin-top: -10px;">
+            <i class="fa-solid fa-share-nodes"></i>
+            <span>SHARE</span>
+        </a>
+        <a href="profile.html" class="nav-item active">
+            <i class="fa-solid fa-user"></i>
+            <span>Profile</span>
+        </a>
     </nav>
 
     <script>
-        // Data Load Karo
-        window.onload = function() {
-            // Humne index.html se naam uthana hai (agar localStorage mein save kiya ho)
-            const savedName = localStorage.getItem('username') || "Dear User";
-            document.getElementById('display-name').innerText = savedName;
-            document.getElementById('avatar-letter').innerText = savedName.charAt(0).toUpperCase();
-            
-            const savedUPI = localStorage.getItem('userUPI');
-            if(savedUPI) {
-                document.getElementById('upi-status').innerText = savedUPI;
+        // AAPKA GOOGLE SCRIPT URL
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbwF9opapqWshWQxsiLYC2WQHd2OXPkYT0GpTnaOGE9T7tRUSUgtjmSWWTbithXrZESe/exec';
+
+        // Page Load par Data Restore karein
+        window.onload = () => {
+            const sn = localStorage.getItem('userName');
+            const sp = localStorage.getItem('userPhone');
+            const su = localStorage.getItem('userUPI');
+
+            if(sn) {
+                document.getElementById('nameInput').value = sn;
+                document.getElementById('userNameDisplay').innerText = sn;
             }
-        }
-
-        function openModal(type) {
-            document.getElementById('upiModal').style.display = 'flex';
-        }
-
-        function closeModal() {
-            document.getElementById('upiModal').style.display = 'none';
-        }
-
-        function saveUPI() {
-            const val = document.getElementById('upiInput').value;
-            if(val) {
-                localStorage.setItem('userUPI', val);
-                document.getElementById('upi-status').innerText = val;
-                closeModal();
-                alert("UPI ID Saved!");
+            if(sp) {
+                document.getElementById('phoneInput').value = sp;
+                document.getElementById('userPhoneDisplay').innerText = "+91 " + sp;
             }
-        }
+            if(su) document.getElementById('upiInput').value = su;
+        };
 
-        function checkWithdrawal() {
-            alert("Insufficient Balance. Minimum withdrawal is ₹300.");
-        }
+        // Form Submit hone par Sheet me bhejien
+        document.getElementById('profileForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const btn = document.getElementById('btnText');
+            btn.innerText = "Processing...";
+            btn.disabled = true;
+
+            fetch(scriptURL, { method: 'POST', body: new FormData(this)})
+            .then(res => {
+                // Local Storage update
+                const n = document.getElementById('nameInput').value;
+                const p = document.getElementById('phoneInput').value;
+                const u = document.getElementById('upiInput').value;
+
+                localStorage.setItem('userName', n);
+                localStorage.setItem('userPhone', p);
+                localStorage.setItem('userUPI', u);
+
+                alert("Account Details Sheet mein save ho gayi hain!");
+                btn.innerText = "Save & Register";
+                btn.disabled = false;
+                document.getElementById('userNameDisplay').innerText = n;
+                document.getElementById('userPhoneDisplay').innerText = "+91 " + p;
+            })
+            .catch(err => {
+                alert("Technical Error! Check Internet Connection.");
+                btn.innerText = "Save & Register";
+                btn.disabled = false;
+            });
+        });
     </script>
 </body>
 </html>
