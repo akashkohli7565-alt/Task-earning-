@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login & Register - Earn Money</title>
+    <title>Login & Register - Sabun Earning App</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         :root { --primary: #0066ff; --bg: #f4f7fe; }
@@ -26,16 +26,15 @@
         .toggle-text { margin-top: 25px; font-size: 14px; color: #666; }
         .toggle-text span { color: var(--primary); font-weight: 700; cursor: pointer; text-decoration: underline; }
         
-        /* Hidden class for switching */
         .hidden { display: none; }
     </style>
 </head>
 <body>
 
     <div class="auth-container">
-        <span class="logo">💰</span>
+        <span class="logo">🧼</span>
         <h2 id="title">Create Account</h2>
-        <p id="subtitle">Start your earning journey with us!</p>
+        <p id="subtitle">Start your soap earning journey!</p>
 
         <div id="reg-only" class="form-group">
             <label>Full Name</label>
@@ -60,7 +59,7 @@
     </div>
 
     <script>
-        let mode = 'register'; // Default mode
+        let mode = 'register'; 
 
         function switchMode() {
             const title = document.getElementById('title');
@@ -72,14 +71,14 @@
             if (mode === 'register') {
                 mode = 'login';
                 title.innerText = "Welcome Back";
-                subtitle.innerText = "Login to access your dashboard";
+                subtitle.innerText = "Login to access your plans";
                 regField.classList.add('hidden');
                 btnText.innerText = "Login Now";
                 toggleMsg.innerHTML = "Don't have an account? <span onclick='switchMode()'>Register</span>";
             } else {
                 mode = 'register';
                 title.innerText = "Create Account";
-                subtitle.innerText = "Start your earning journey with us!";
+                subtitle.innerText = "Start your soap earning journey!";
                 regField.classList.remove('hidden');
                 btnText.innerText = "Register Now";
                 toggleMsg.innerHTML = "Already have an account? <span onclick='switchMode()'>Login</span>";
@@ -89,20 +88,36 @@
         function processAuth() {
             const phone = document.getElementById('phone').value;
             const password = document.getElementById('pass').value;
+            const name = document.getElementById('name').value;
 
-            // Simple validation
+            // Basic Validation
             if (phone.length < 10) {
-                alert("Please enter a valid mobile number!");
+                alert("Please enter a valid 10-digit mobile number!");
                 return;
             }
             if (password.length < 4) {
                 alert("Password must be at least 4 characters!");
                 return;
             }
+            if (mode === 'register' && name === "") {
+                alert("Please enter your name!");
+                return;
+            }
 
-            // Success: Redirect to home.html
-            // Yahan se bnda seedha dashboard par jayega
-            window.location.href = "home.html";
+            // User data ko phone ki memory (localStorage) mein save karna
+            // Taki Recharge ke time Sheet mein naam/phone automatic chala jaye
+            localStorage.setItem('userPhone', phone);
+            if(mode === 'register') {
+                localStorage.setItem('userName', name);
+            } else {
+                // Login ke liye default name agar store na ho
+                if(!localStorage.getItem('userName')) {
+                    localStorage.setItem('userName', 'User_' + phone.substring(6));
+                }
+            }
+
+            // Seedha Plans page par bhej rahe hain
+            window.location.href = "plans.html";
         }
     </script>
 </body>
