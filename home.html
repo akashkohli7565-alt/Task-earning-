@@ -3,44 +3,87 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Earn Real Money - Dashboard</title>
+    <title>Dashboard - Earn Money</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        :root { --primary: #0066ff; --success: #28a745; --bg: #f2f5f9; }
+        :root { --primary: #0066ff; --success: #28a745; --bg: #f4f7fe; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
-        body { background: var(--bg); color: #333; padding-bottom: 100px; }
+        body { background: var(--bg); color: #333; padding-bottom: 90px; overflow-x: hidden; }
 
-        /* Banner */
-        .top-banner { background: white; padding: 22px 15px; text-align: center; border-bottom: 1px solid #e0e0e0; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
-        .top-banner h2 { font-size: 17px; color: #1a1a1a; font-weight: 700; line-height: 1.4; }
+        /* Welcome Banner - Jo apne aap hatega */
+        #welcome-banner {
+            background: linear-gradient(135deg, #0066ff, #0044bb);
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-weight: 700;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 2000;
+            transition: 0.5s ease-in-out;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .hide-welcome { transform: translateY(-100%); }
 
-        /* Task List */
-        .container { padding: 15px; }
-        .task-card { background: white; border-radius: 18px; padding: 16px; margin-bottom: 15px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 4px 15px rgba(0,0,0,0.04); cursor: pointer; border: 1px solid transparent; }
+        /* Header Section */
+        .header { background: white; padding: 25px 20px; text-align: center; border-bottom: 1px solid #e0e0e0; border-radius: 0 0 25px 25px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); margin-top: 0; }
+        .header h2 { font-size: 18px; color: #1a1a1a; font-weight: 700; }
+        .header p { font-size: 13px; color: #666; margin-top: 5px; }
+
+        /* Container */
+        .container { padding: 20px; }
         
-        .task-left { display: flex; align-items: center; gap: 14px; }
-        .task-icon { width: 55px; height: 55px; border-radius: 14px; object-fit: contain; padding: 4px; border: 1px solid #f0f0f0; }
-        .task-info h3 { font-size: 15px; font-weight: 700; color: #222; }
-        .reward-amt { font-size: 19px; font-weight: 800; color: var(--success); }
+        /* Task Cards */
+        .task-card { background: white; border-radius: 20px; padding: 16px; margin-bottom: 15px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 6px 15px rgba(0,0,0,0.04); cursor: pointer; transition: 0.2s; border: 1px solid transparent; }
+        .task-card:active { transform: scale(0.97); background: #fafafa; }
+        
+        .task-left { display: flex; align-items: center; gap: 15px; }
+        .task-icon { width: 50px; height: 50px; border-radius: 12px; object-fit: contain; background: #f9f9f9; padding: 5px; }
+        .task-info h3 { font-size: 15px; font-weight: 700; color: #222; margin-bottom: 4px; }
+        .reward-amt { font-size: 18px; font-weight: 800; color: var(--success); }
 
-        /* Bottom Nav Fix */
-        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: white; display: flex; justify-content: space-around; align-items: center; padding: 12px 0; border-top: 1px solid #eee; box-shadow: 0 -4px 15px rgba(0,0,0,0.03); z-index: 100; }
-        .nav-item { text-align: center; font-size: 11px; color: #a0a0a0; flex: 1; text-decoration: none; display: flex; flex-direction: column; align-items: center; }
+        /* Modal / Popup */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 1000; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(5px); }
+        .modal-box { background: white; width: 100%; max-width: 380px; border-radius: 28px; padding: 30px; text-align: center; animation: popUp 0.3s ease-out; }
+        @keyframes popUp { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        
+        .modal-box h3 { font-size: 20px; margin-bottom: 10px; font-weight: 700; }
+        .modal-box input { width: 100%; padding: 14px; margin-bottom: 12px; border: 1.5px solid #eee; border-radius: 12px; font-size: 15px; outline: none; background: #fbfbfb; }
+        .submit-btn { width: 100%; background: #000; color: white; border: none; padding: 16px; border-radius: 12px; font-weight: 700; font-size: 16px; cursor: pointer; }
+
+        /* BOTTOM NAV */
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: white; display: flex; justify-content: space-around; align-items: center; padding: 12px 0; border-top: 1px solid #eee; box-shadow: 0 -5px 20px rgba(0,0,0,0.05); z-index: 100; }
+        .nav-item { text-align: center; font-size: 11px; color: #a0a0a0; flex: 1; text-decoration: none; display: flex; flex-direction: column; align-items: center; cursor: pointer; }
         .nav-item.active { color: var(--primary); font-weight: 700; }
-        .nav-item.ref-btn { background: var(--primary); color: white !important; padding: 10px; border-radius: 15px; margin: 0 10px; flex: 1.3; }
-        .nav-item span { font-size: 20px; margin-bottom: 2px; }
+        .nav-item.share-btn { background: var(--primary); color: white !important; padding: 8px; border-radius: 15px; margin: 0 10px; flex: 1.2; }
+        .nav-item span { font-size: 22px; margin-bottom: 3px; }
     </style>
 </head>
 <body>
 
-    <div class="top-banner">
-        <h2>Complete your task and earn real money</h2>
+    <div id="welcome-banner">
+        🎉 Welcome back to your Dashboard!
     </div>
 
-    <div class="container" id="taskList">
-        </div>
+    <div class="header">
+        <h2>Available Tasks</h2>
+        <p>Complete tasks and earn real money</p>
+    </div>
 
-    <div class="bottom-nav">
+    <div class="container" id="taskList"></div>
+
+    <div id="taskModal" class="modal">
+        <div class="modal-box">
+            <h3 id="modalTitle">Confirm Details</h3>
+            <input type="text" id="userName" placeholder="Full Name (Aadhar)">
+            <input type="tel" id="userPhone" placeholder="Mobile Number">
+            <button class="submit-btn" onclick="handleTaskSubmission()">Start Task</button>
+            <p style="font-size: 13px; color: #999; margin-top: 15px; cursor: pointer;" onclick="closePopup()">Cancel</p>
+        </div>
+    </div>
+
+    <nav class="bottom-nav">
         <a href="home.html" class="nav-item active">
             <span>🏠</span>
             <p>Home</p>
@@ -49,34 +92,70 @@
             <span>📋</span>
             <p>My Tasks</p>
         </a>
-        <a href="referral.html" class="nav-item ref-btn">
-            <span>📢</span>
-            <p>REFERRAL</p>
-        </a>
+        <div class="nav-item share-btn" onclick="shareApp()">
+            <span>📲</span>
+            <p>SHARE</p>
+        </div>
         <a href="profile.html" class="nav-item">
             <span>👤</span>
             <p>Profile</p>
         </a>
-    </div>
+    </nav>
 
     <script>
+        // Welcome Banner Auto-Hide Logic
+        window.onload = function() {
+            setTimeout(function() {
+                document.getElementById('welcome-banner').classList.add('hide-welcome');
+            }, 3000); // 3 seconds baad hat jayenge
+        };
+
         const tasks = [
-            { id: 1, name: "Angel One - Demat Account", reward: "₹100", icon: "https://i.ibb.co/NgLJX1H7/Angel-One-1689341693674.avif" },
-            { id: 2, name: "Upstox - KYC & Earn", reward: "₹100", icon: "https://i.ibb.co/G3dPNW2Q/Upstox.webp" }
+            { id: 1, name: "Angel One - Demat", reward: "₹100", icon: "https://i.ibb.co/NgLJX1H7/Angel-One-1689341693674.avif", link: "https://angelone.in" },
+            { id: 2, name: "Upstox - KYC", reward: "₹100", icon: "https://i.ibb.co/G3dPNW2Q/Upstox.webp", link: "https://upstox.com" },
+            { id: 3, name: "Navi UPI", reward: "₹30", icon: "https://i.ibb.co/d0LgVNX1/navi-technologies-app-icon.png", link: "https://navi.com" }
         ];
+
+        let selectedTask = null;
 
         function renderTasks() {
             const list = document.getElementById('taskList');
             list.innerHTML = tasks.map(task => `
-                <div class="task-card">
+                <div class="task-card" onclick="openPopup(${task.id})">
                     <div class="task-left">
                         <img src="${task.icon}" class="task-icon">
-                        <div class="task-info"><h3>${task.name}</h3></div>
+                        <div class="task-info">
+                            <h3>${task.name}</h3>
+                        </div>
                     </div>
                     <div class="reward-amt">${task.reward}</div>
                 </div>
             `).join('');
         }
+
+        function openPopup(id) {
+            selectedTask = tasks.find(t => t.id === id);
+            document.getElementById('modalTitle').innerText = selectedTask.name;
+            document.getElementById('taskModal').style.display = 'flex';
+        }
+
+        function closePopup() { document.getElementById('taskModal').style.display = 'none'; }
+
+        function handleTaskSubmission() {
+            const name = document.getElementById('userName').value;
+            const phone = document.getElementById('userPhone').value;
+            if (name && phone) {
+                window.location.href = selectedTask.link;
+            } else {
+                alert("Enter details!");
+            }
+        }
+
+        function shareApp() {
+            const text = "Join this app and start earning! " + window.location.href;
+            window.open("https://wa.me/?text=" + encodeURIComponent(text), '_blank');
+        }
+
         renderTasks();
     </script>
 </body>
