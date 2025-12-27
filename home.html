@@ -41,9 +41,9 @@
         .agree-wrap { display: flex; align-items: center; gap: 10px; font-size: 12px; color: #555; margin: 10px 0 20px; text-align: left; }
         .submit-btn { width: 100%; background: #000; color: white; border: none; padding: 16px; border-radius: 14px; font-weight: 700; font-size: 16px; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
         
-        /* Bottom Menu */
+        /* Bottom Menu Fixed With Links */
         .bottom-nav { position: fixed; bottom: 0; width: 100%; background: white; display: flex; justify-content: space-around; align-items: center; padding: 12px 0; border-top: 1px solid #eee; box-shadow: 0 -4px 15px rgba(0,0,0,0.03); z-index: 100; }
-        .nav-item { text-align: center; font-size: 11px; color: #a0a0a0; flex: 1; cursor: pointer; text-decoration: none; }
+        .nav-item { text-align: center; font-size: 11px; color: #a0a0a0; flex: 1; text-decoration: none; cursor: pointer; }
         .nav-item.active { color: var(--primary); font-weight: 700; }
         .nav-item.ref-btn { background: var(--primary); color: white; padding: 12px; border-radius: 15px; margin: 0 10px; flex: 1.3; box-shadow: 0 4px 10px rgba(0,102,255,0.3); }
         .nav-item span { font-size: 18px; margin-bottom: 3px; display: block; }
@@ -55,8 +55,7 @@
         <h2>Complete your task and earn real money</h2>
     </div>
 
-    <div class="container" id="taskList">
-        </div>
+    <div class="container" id="taskList"></div>
 
     <div id="taskModal" class="modal">
         <div class="modal-box">
@@ -76,39 +75,17 @@
     </div>
 
     <div class="bottom-nav">
-        <div class="nav-item active"><span>🏠</span>Home</div>
-        <div class="nav-item"><span>📋</span>My Tasks</div>
-        <div class="nav-item ref-btn"><span>📢</span>REFERRAL</div>
-        <div class="nav-item"><span>👤</span>Profile</div>
+        <a href="home.html" class="nav-item active"><span>🏠</span>Home</a>
+        <a href="my-task.html" class="nav-item"><span>📋</span>My Tasks</a>
+        <a href="referral.html" class="nav-item ref-btn"><span>📢</span>REFERRAL</a>
+        <a href="profile.html" class="nav-item"><span>👤</span>Profile</a>
     </div>
 
     <script>
-        // Tasks array with your updated image links
         const tasks = [
-            { 
-                id: 1, 
-                name: "Angel One - Demat Account", 
-                reward: "₹100", 
-                time: "15 min", 
-                icon: "https://i.ibb.co/NgLJX1H7/Angel-One-1689341693674.avif", 
-                link: "https://angelone.in" 
-            },
-            { 
-                id: 2, 
-                name: "Upstox - KYC & Earn", 
-                reward: "₹100", 
-                time: "10 min", 
-                icon: "https://i.ibb.co/G3dPNW2Q/Upstox.webp", 
-                link: "https://upstox.com" 
-            },
-            { 
-                id: 3, 
-                name: "Navi UPI - Activation", 
-                reward: "₹30", 
-                time: "2 min", 
-                icon: "https://i.ibb.co/d0LgVNX1/navi-technologies-app-icon.png", 
-                link: "https://navi.com" 
-            }
+            { id: 1, name: "Angel One - Demat Account", reward: "₹100", time: "15 min", icon: "https://i.ibb.co/NgLJX1H7/Angel-One-1689341693674.avif", link: "https://angelone.in" },
+            { id: 2, name: "Upstox - KYC & Earn", reward: "₹100", time: "10 min", icon: "https://i.ibb.co/G3dPNW2Q/Upstox.webp", link: "https://upstox.com" },
+            { id: 3, name: "Navi UPI - Activation", reward: "₹30", time: "2 min", icon: "https://i.ibb.co/d0LgVNX1/navi-technologies-app-icon.png", link: "https://navi.com" }
         ];
 
         let selectedTask = null;
@@ -138,9 +115,7 @@
             document.getElementById('taskModal').style.display = 'flex';
         }
 
-        function closePopup() {
-            document.getElementById('taskModal').style.display = 'none';
-        }
+        function closePopup() { document.getElementById('taskModal').style.display = 'none'; }
 
         function handleTaskSubmission() {
             const name = document.getElementById('userName').value;
@@ -148,10 +123,6 @@
             const agree = document.getElementById('userAgree').checked;
 
             if (name && phone && agree) {
-                // Future Excel placeholder:
-                console.log("Saving to future Excel:", { name, phone, task: selectedTask.name });
-                
-                // Redirect to actual task link
                 window.location.href = selectedTask.link;
             } else {
                 alert("Please fill all fields and agree to terms!");
