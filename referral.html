@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Refer & Earn</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root { --primary: #0066ff; --bg: #f4f7fe; --white: #ffffff; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background: var(--bg); padding: 20px; padding-bottom: 100px; }
+        
+        .ref-card { background: var(--white); padding: 30px 20px; border-radius: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); text-align: center; }
+        .gift-icon { font-size: 50px; color: #ff9500; margin-bottom: 15px; }
+        
+        .link-box { background: #f0f4ff; border: 2px dashed var(--primary); padding: 12px; border-radius: 12px; margin: 15px 0; font-size: 12px; color: var(--primary); font-weight: 600; word-break: break-all; }
+        
+        .btn-share { background: var(--primary); color: white; border: none; width: 100%; padding: 14px; border-radius: 12px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
+
+        /* Referral List Styling */
+        .my-referrals { margin-top: 25px; }
+        .list-title { font-size: 16px; font-weight: 700; margin-bottom: 15px; display: flex; justify-content: space-between; }
+        .ref-item { background: white; padding: 15px; border-radius: 15px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.02); }
+        .ref-info h4 { font-size: 14px; color: #333; }
+        .ref-info p { font-size: 11px; color: #888; }
+        .status-badge { font-size: 10px; background: #e8f5e9; color: #2e7d32; padding: 4px 8px; border-radius: 6px; font-weight: 700; }
+
+        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: var(--white); display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #eee; }
+        .nav-item { text-decoration: none; color: #bbb; display: flex; flex-direction: column; align-items: center; font-size: 11px; font-weight: 600; flex: 1; }
+        .nav-item.active { color: var(--primary); }
+    </style>
+</head>
+<body>
+
+    <div class="ref-card">
+        <i class="fa-solid fa-gift gift-icon"></i>
+        <h3>Refer & Earn ₹50</h3>
+        <p style="font-size: 12px; color: #666; margin-top: 5px;">Aapke link se join hone par aapko reward milega.</p>
+        
+        <div class="link-box" id="refLinkDisplay">loading...</div>
+
+        <button class="btn-share" onclick="copyLink()">
+            <i class="fa-solid fa-copy"></i> Copy Link
+        </button>
+    </div>
+
+    <div class="my-referrals">
+        <div class="list-title">
+            <span>My Referrals</span>
+            <span id="refCount" style="color: var(--primary);">0</span>
+        </div>
+        
+        <div id="referralList">
+            <p style="text-align: center; color: #999; font-size: 12px; margin-top: 20px;">Abhi tak kisi ne join nahi kiya.</p>
+        </div>
+    </div>
+
+    <nav class="bottom-nav">
+        <a href="home.html" class="nav-item"><i class="fa-solid fa-house"></i><span>Home</span></a>
+        <a href="referral.html" class="nav-item active"><i class="fa-solid fa-share-nodes"></i><span>Referral</span></a>
+        <a href="profile.html" class="nav-item"><i class="fa-solid fa-user"></i><span>Profile</span></a>
+    </nav>
+
+    <script>
+        const phone = localStorage.getItem('userPhone') || 'Guest';
+        const myLink = window.location.origin + "/index.html?ref=" + phone;
+        document.getElementById('refLinkDisplay').innerText = myLink;
+
+        function copyLink() {
+            navigator.clipboard.writeText(myLink);
+            alert("Link Copy ho gaya!");
+        }
+
+        // --- REAL-TIME REFERRAL TRACKING LOGIC ---
+        // Note: Real world mein ye data hum Database (Google Sheets) se fetch karenge.
+        // Filhaal hum Demo ke liye LocalStorage se dikha rahe hain.
+        
+        function loadReferrals() {
+            // Hum imagine kar rahe hain ki jab koi join karta hai, hum use 'myRefList' mein save karte hain
+            const rawData = localStorage.getItem('myRefList');
+            const listContainer = document.getElementById('referralList');
+            const countDisplay = document.getElementById('refCount');
+
+            if (rawData) {
+                const referrals = JSON.parse(rawData);
+                countDisplay.innerText = referrals.length;
+                
+                listContainer.innerHTML = referrals.map(user => `
+                    <div class="ref-item">
+                        <div class="ref-info">
+                            <h4>${user.name}</h4>
+                            <p>${user.phone.slice(0, 5)}*****</p>
+                        </div>
+                        <span class="status-badge">Joined ✅</span>
+                    </div>
+                `).join('');
+            }
+        }
+
+        window.onload = loadReferrals;
+    </script>
+</body>
+</html>
