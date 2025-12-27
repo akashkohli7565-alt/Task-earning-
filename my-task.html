@@ -3,112 +3,99 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Tasks - Earning App</title>
+    <title>My Tasks - History</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        :root { --primary: #0066ff; --success: #28a745; --pending: #ff9800; --bg: #f8f9fa; }
+        :root { --primary: #0066ff; --bg: #f5f7fa; --pending: #ff9800; --success: #28a745; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
-        body { background: var(--bg); color: #333; padding-bottom: 80px; }
+        body { background: var(--bg); padding-bottom: 90px; }
 
         /* Header */
-        .header { background: white; padding: 18px; text-align: center; border-bottom: 1px solid #eee; position: sticky; top: 0; z-index: 100; }
-        .header h2 { font-size: 18px; font-weight: 700; color: #1a1a1a; }
+        .header { background: white; padding: 20px; text-align: center; border-bottom: 1px solid #eee; position: sticky; top: 0; z-index: 100; }
+        .header h2 { font-size: 18px; font-weight: 700; color: #222; }
 
-        /* Status Filter Tabs */
-        .tabs { display: flex; background: white; border-bottom: 1px solid #eee; }
-        .tab { flex: 1; text-align: center; padding: 15px; font-size: 13px; font-weight: 600; color: #888; cursor: pointer; border-bottom: 2px solid transparent; }
+        /* Status Tabs */
+        .tabs { display: flex; background: white; border-bottom: 1px solid #eee; margin-bottom: 15px; }
+        .tab { flex: 1; text-align: center; padding: 15px; font-size: 13px; font-weight: 600; color: #888; cursor: pointer; border-bottom: 3px solid transparent; }
         .tab.active { color: var(--primary); border-bottom-color: var(--primary); }
 
-        /* Task List Container */
-        .task-list { padding: 15px; }
+        /* Task List */
+        .task-container { padding: 0 15px; }
+        .task-item { background: white; border-radius: 18px; padding: 15px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 4px 10px rgba(0,0,0,0.03); border: 1px solid #f0f0f0; }
         
-        /* Individual Task Card */
-        .history-card { background: white; border-radius: 16px; padding: 15px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 8px rgba(0,0,0,0.03); }
-        
-        .card-left { display: flex; align-items: center; gap: 12px; }
-        .task-icon { width: 45px; height: 45px; border-radius: 10px; object-fit: contain; background: #f9f9f9; padding: 4px; border: 1px solid #f0f0f0; }
-        .task-info h4 { font-size: 14px; font-weight: 600; color: #222; margin-bottom: 3px; }
-        .task-date { font-size: 11px; color: #999; }
+        .t-left { display: flex; align-items: center; gap: 12px; }
+        .t-icon { width: 48px; height: 48px; border-radius: 12px; object-fit: contain; background: #f9f9f9; padding: 5px; }
+        .t-info h4 { font-size: 14px; font-weight: 700; color: #1a1a1a; margin-bottom: 3px; }
+        .t-info p { font-size: 11px; color: #999; }
 
-        .card-right { text-align: right; }
-        .status-badge { font-size: 10px; padding: 4px 10px; border-radius: 6px; font-weight: 800; text-transform: uppercase; margin-bottom: 5px; display: inline-block; }
-        
-        /* Status Colors */
+        .t-right { text-align: right; }
+        .status-badge { font-size: 10px; padding: 4px 10px; border-radius: 6px; font-weight: 800; text-transform: uppercase; margin-bottom: 4px; display: inline-block; }
         .pending { background: #fff3e0; color: var(--pending); }
         .success { background: #e8f5e9; color: var(--success); }
-        
         .amount { font-size: 15px; font-weight: 700; color: #333; }
 
-        /* Bottom Menu */
-        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: white; display: flex; justify-content: space-around; align-items: center; padding: 12px 0; border-top: 1px solid #eee; box-shadow: 0 -4px 10px rgba(0,0,0,0.03); }
-        .nav-item { text-align: center; font-size: 11px; color: #a0a0a0; flex: 1; cursor: pointer; text-decoration: none; }
+        /* Bottom Nav */
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: white; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #eee; box-shadow: 0 -5px 15px rgba(0,0,0,0.02); }
+        .nav-item { text-align: center; font-size: 11px; color: #a0a0a0; flex: 1; text-decoration: none; }
         .nav-item.active { color: var(--primary); font-weight: 700; }
-        .nav-item span { font-size: 20px; display: block; margin-bottom: 2px; }
+        .nav-item span { font-size: 20px; display: block; margin-bottom: 3px; }
     </style>
 </head>
 <body>
 
     <div class="header">
-        <h2>My Task History</h2>
+        <h2>My Task Status</h2>
     </div>
 
     <div class="tabs">
         <div class="tab active">All</div>
-        <div class="tab">Reviewing</div>
+        <div class="tab">Pending</div>
         <div class="tab">Completed</div>
     </div>
 
-    <div class="task-list">
-        
-        <div class="history-card">
-            <div class="card-left">
-                <img src="https://i.ibb.co/G3dPNW2Q/Upstox.webp" class="task-icon">
-                <div class="task-info">
-                    <h4>Upstox - KYC</h4>
-                    <p class="task-date">Submitted: 27 Dec 2025</p>
+    <div class="task-container">
+        <div class="task-item">
+            <div class="t-left">
+                <img src="https://i.ibb.co/G3dPNW2Q/Upstox.webp" class="t-icon">
+                <div class="t-info">
+                    <h4>Upstox KYC</h4>
+                    <p>Submitted: 27 Dec 2025</p>
                 </div>
             </div>
-            <div class="card-right">
-                <div class="status-badge pending">PENDING</div>
+            <div class="t-right">
+                <div class="status-badge pending">Pending</div>
                 <div class="amount">₹100</div>
             </div>
         </div>
 
-        <div class="history-card">
-            <div class="card-left">
-                <img src="https://i.ibb.co/NgLJX1H7/Angel-One-1689341693674.avif" class="task-icon">
-                <div class="task-info">
-                    <h4>Angel One - Demat</h4>
-                    <p class="task-date">Submitted: 26 Dec 2025</p>
+        <div class="task-item">
+            <div class="t-left">
+                <img src="https://i.ibb.co/NgLJX1H7/Angel-One-1689341693674.avif" class="t-icon">
+                <div class="t-info">
+                    <h4>Angel One</h4>
+                    <p>Submitted: 26 Dec 2025</p>
                 </div>
             </div>
-            <div class="card-right">
-                <div class="status-badge pending">PENDING</div>
+            <div class="t-right">
+                <div class="status-badge pending">Pending</div>
                 <div class="amount">₹100</div>
             </div>
         </div>
-
-        <div class="history-card">
-            <div class="card-left">
-                <img src="https://i.ibb.co/d0LgVNX1/navi-technologies-app-icon.png" class="task-icon">
-                <div class="task-info">
-                    <h4>Navi UPI</h4>
-                    <p class="task-date">Completed: 24 Dec 2025</p>
-                </div>
-            </div>
-            <div class="card-right">
-                <div class="status-badge success">SUCCESS</div>
-                <div class="amount">₹30</div>
-            </div>
-        </div>
-
     </div>
 
     <div class="bottom-nav">
-        <a href="index.html" class="nav-item"><span>🏠</span>Home</a>
-        <a href="my-tasks.html" class="nav-item active"><span>📋</span>My Tasks</a>
-        <a href="#" class="nav-item"><span>📢</span>REFERRAL</a>
-        <a href="#" class="nav-item"><span>👤</span>Profile</a>
+        <a href="index.html" class="nav-item">
+            <span>🏠</span><p>Home</p>
+        </a>
+        <a href="my-task.html" class="nav-item active">
+            <span>📋</span><p>My Tasks</p>
+        </a>
+        <a href="referral.html" class="nav-item">
+            <span>📢</span><p>REFERRAL</p>
+        </a>
+        <a href="profile.html" class="nav-item">
+            <span>👤</span><p>Profile</p>
+        </a>
     </div>
 
 </body>
