@@ -3,48 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profile & Withdrawal</title>
+    <title>Profile Section</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root { --bg: #f5f7ff; --card: #ffffff; --accent: #4a6cf7; --text: #333; }
+        :root { --bg: #f8faff; --card: #ffffff; --accent: #4a6cf7; --text: #333; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
-        body { background: var(--bg); color: var(--text); padding-bottom: 80px; }
+        body { background: var(--bg); color: var(--text); padding-bottom: 30px; }
         
-        /* Top Profile Header */
-        .profile-header { background: white; padding: 30px 20px; text-align: center; border-bottom-left-radius: 30px; border-bottom-right-radius: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
-        .avatar { width: 80px; height: 80px; background: var(--accent); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 32px; font-weight: bold; margin: 0 auto 10px; }
-        .badge { background: #e8f5e9; color: #2e7d32; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: bold; }
+        /* Top Profile Header Fix */
+        .profile-header { background: white; padding: 40px 20px 60px; text-align: center; border-bottom-left-radius: 35px; border-bottom-right-radius: 35px; box-shadow: 0 5px 20px rgba(0,0,0,0.05); }
+        .avatar { width: 85px; height: 85px; background: var(--accent); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 35px; font-weight: bold; margin: 0 auto 15px; border: 4px solid #fff; box-shadow: 0 5px 15px rgba(74, 108, 247, 0.2); }
+        .verified-box { display: flex; align-items: center; justify-content: center; gap: 6px; margin-top: 5px; }
+        .verified-box i { color: #2ecc71; font-size: 18px; }
+        .verified-box span { color: #777; font-size: 14px; font-weight: 500; }
 
         /* Balance Card */
-        .balance-card { background: #1a1a1a; color: white; margin: -40px 20px 20px; padding: 25px; border-radius: 24px; text-align: center; position: relative; z-index: 10; }
-        .balance-card p { opacity: 0.7; font-size: 13px; }
-        .balance-card h1 { font-size: 36px; margin: 5px 0; }
+        .balance-card { background: #1a1a1a; color: white; margin: -40px 25px 25px; padding: 30px; border-radius: 28px; text-align: center; position: relative; z-index: 10; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
+        .balance-card p { opacity: 0.6; font-size: 13px; text-transform: uppercase; letter-spacing: 1px; }
+        .balance-card h1 { font-size: 40px; margin: 8px 0; font-weight: 700; }
 
         /* Sections */
-        .section { background: white; margin: 15px 20px; padding: 20px; border-radius: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.03); }
-        .section-title { font-size: 14px; font-weight: bold; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
+        .section { background: white; margin: 15px 20px; padding: 22px; border-radius: 24px; box-shadow: 0 4px 15px rgba(0,0,0,0.04); }
+        .section-title { font-size: 15px; font-weight: 700; margin-bottom: 18px; display: flex; align-items: center; gap: 12px; color: #444; }
         
-        input { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #eee; background: #f9f9f9; margin-bottom: 10px; outline: none; }
-        .btn { width: 100%; padding: 14px; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; transition: 0.3s; }
-        .btn-blue { background: var(--accent); color: white; }
-        .btn-outline { background: #f0f3ff; color: var(--accent); margin-top: 10px; }
-        
-        .referral-box { background: #fff9c4; padding: 15px; border-radius: 12px; border: 1px dashed #fbc02d; text-align: center; }
-        
-        /* Logout & Support */
-        .menu-item { display: flex; align-items: center; justify-content: space-between; padding: 15px 0; border-bottom: 1px solid #f5f5f5; cursor: pointer; }
-        .menu-item:last-child { border: none; }
-        .logout { color: #d32f2f; font-weight: bold; }
+        input { width: 100%; padding: 14px; border-radius: 12px; border: 1px solid #eee; background: #f9fbff; margin-bottom: 12px; outline: none; font-size: 14px; transition: 0.3s; }
+        input:focus { border-color: var(--accent); }
 
-        #successMsg { display: none; color: #2e7d32; background: #e8f5e9; padding: 10px; border-radius: 8px; text-align: center; margin-bottom: 10px; font-size: 13px; }
+        .btn { width: 100%; padding: 15px; border: none; border-radius: 14px; font-weight: 700; font-size: 15px; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .btn-blue { background: var(--accent); color: white; box-shadow: 0 5px 15px rgba(74, 108, 247, 0.3); }
+        .btn-outline { background: #f0f3ff; color: var(--accent); }
+        .btn:active { transform: scale(0.97); }
+
+        .referral-box { background: #fffcf0; padding: 18px; border-radius: 16px; border: 1px dashed #fbc02d; text-align: center; }
+        
+        /* Menu Items */
+        .menu-item { display: flex; align-items: center; justify-content: space-between; padding: 18px 5px; border-bottom: 1px solid #f8f8f8; cursor: pointer; }
+        .menu-item:last-child { border: none; }
+        .menu-item i.main-icon { width: 35px; color: var(--accent); font-size: 18px; }
+        .logout { color: #e74c3c; font-weight: 700; }
     </style>
 </head>
 <body>
 
     <div class="profile-header">
         <div class="avatar" id="userInitial">A</div>
-        <h2 id="userNameDisplay">Akash</h2>
-        <span class="badge"><i class="fa-solid fa-circle-check"></i> Verified Member</span>
+        <h2 id="userNameDisplay" style="font-weight: 800; font-size: 24px;">Akash</h2>
+        <div class="verified-box">
+            <i class="fa-solid fa-circle-check"></i>
+            <span>Verified Member</span>
+        </div>
     </div>
 
     <div class="balance-card">
@@ -53,40 +60,40 @@
     </div>
 
     <div class="section">
-        <div class="section-title"><i class="fa-solid fa-bank" style="color:var(--accent)"></i> Withdrawal</div>
-        <p style="font-size: 12px; color: #d32f2f; margin-bottom: 10px;">⚠️ Min Withdrawal: ₹300</p>
-        <div id="successMsg">Request Sent Successfully!</div>
-        <input type="number" id="withdrawAmt" placeholder="Enter Amount">
-        <button class="btn btn-blue" id="withdrawBtn" onclick="sendWithdrawRequest()">Withdraw Funds</button>
+        <div class="section-title"><i class="fa-solid fa-wallet" style="color:var(--accent)"></i> Wallet & Payout</div>
+        <p style="font-size: 12px; color: #888; margin-bottom: 15px;">Check your earnings and withdraw funds to bank.</p>
+        <button class="btn btn-blue" onclick="location.href='withdraw.html'">
+            <i class="fa-solid fa-money-bill-transfer"></i> Withdraw Funds
+        </button>
     </div>
 
     <div class="section">
-        <div class="section-title"><i class="fa-solid fa-credit-card" style="color:#fbc02d"></i> Add/Update UPI ID</div>
-        <input type="text" id="upiInput" placeholder="example@ybl">
-        <button class="btn btn-outline" onclick="saveUPI()">Save UPI ID</button>
+        <div class="section-title"><i class="fa-solid fa-credit-card" style="color:#fbc02d"></i> Payout Settings</div>
+        <input type="text" id="upiInput" placeholder="Enter UPI ID (e.g. name@upi)">
+        <button class="btn btn-outline" onclick="saveUPI()">Update UPI ID</button>
     </div>
 
     <div class="section">
-        <div class="section-title"><i class="fa-solid fa-users" style="color:#4caf50"></i> Referral Program</div>
+        <div class="section-title"><i class="fa-solid fa-share-nodes" style="color:#2ecc71"></i> Refer & Earn</div>
         <div class="referral-box">
-            <p style="font-size: 11px; color: #666;">Share this code with friends</p>
-            <h3 id="refCode" style="letter-spacing: 2px; margin: 5px 0;">EARN500</h3>
-            <button class="btn-outline btn" style="padding: 8px;" onclick="copyReferral()">Copy Referral Link</button>
+            <p style="font-size: 12px; color: #777; margin-bottom: 8px;">Your unique referral code</p>
+            <h3 id="refCode" style="letter-spacing: 3px; font-size: 22px; color: #444; margin-bottom: 12px;">EARN120</h3>
+            <button class="btn btn-outline" style="padding: 10px; font-size: 13px;" onclick="copyReferral()">Copy Invite Link</button>
         </div>
     </div>
 
     <div class="section">
         <div class="menu-item" onclick="window.location.href='https://t.me/OfficialEarnCash'">
-            <span><i class="fa-solid fa-headset"></i> Customer Support</span>
-            <i class="fa-solid fa-chevron-right"></i>
+            <div><i class="fa-solid fa-headset main-icon"></i> <span>Customer Support</span></div>
+            <i class="fa-solid fa-chevron-right" style="font-size: 12px; color: #ccc;"></i>
         </div>
         <div class="menu-item logout" onclick="logout()">
-            <span><i class="fa-solid fa-right-from-bracket"></i> Logout Account</span>
+            <div><i class="fa-solid fa-power-off main-icon"></i> <span>Logout Account</span></div>
         </div>
     </div>
 
     <script>
-        // Load Data
+        // Data Load logic
         const name = localStorage.getItem('userName') || 'User';
         const phone = localStorage.getItem('userPhone') || 'N/A';
         const balance = localStorage.getItem('userBalance') || '0.00';
@@ -95,45 +102,32 @@
         document.getElementById('userInitial').innerText = name.charAt(0).toUpperCase();
         document.getElementById('mainBalance').innerText = "₹ " + balance;
         document.getElementById('upiInput').value = localStorage.getItem('userUPI') || '';
+        document.getElementById('refCode').innerText = "REF" + phone.slice(-6);
 
         const token = "7682752151:AAHnHH8fHvNmLoCIAMPlZ_I88esXwy6b53E";
         const chat_id = "8415600127";
 
-        function sendWithdrawRequest() {
-            const amt = document.getElementById('withdrawAmt').value;
-            const upi = localStorage.getItem('userUPI');
-
-            if(amt < 300) { alert("Bhai, kam se kam ₹300 chahiye!"); return; }
-            if(!upi) { alert("Pehle UPI ID add karo!"); return; }
-
-            const msg = `💸 *NEW WITHDRAWAL REQUEST*\n\n👤 Name: ${name}\n📞 Phone: ${phone}\n💰 Amount: ₹${amt}\n💳 UPI ID: ${upi}`;
-            
-            fetch(`https://api.telegram.org/bot${token}/sendMessage?chat_id=${chat_id}&text=${encodeURIComponent(msg)}&parse_mode=Markdown`);
-
-            document.getElementById('successMsg').style.display = 'block';
-            document.getElementById('withdrawAmt').value = '';
-            setTimeout(() => { document.getElementById('successMsg').style.display = 'none'; }, 4000);
-        }
-
         function saveUPI() {
             const upi = document.getElementById('upiInput').value;
-            if(upi.length < 5) { alert("Sahi UPI dalo!"); return; }
+            if(upi.length < 5 || !upi.includes('@')) { alert("Bhai, sahi UPI ID dalo!"); return; }
             
             localStorage.setItem('userUPI', upi);
             const msg = `💳 *UPI ID UPDATED*\n\n👤 Name: ${name}\n📞 Phone: ${phone}\n✨ New UPI: ${upi}`;
             fetch(`https://api.telegram.org/bot${token}/sendMessage?chat_id=${chat_id}&text=${encodeURIComponent(msg)}&parse_mode=Markdown`);
-            alert("UPI ID Saved!");
+            alert("UPI ID Saved Successfully!");
         }
 
         function copyReferral() {
-            const link = `https://earncash.com/signup?ref=${phone}`; // Example link
+            const link = window.location.origin + "/signup.html?ref=" + phone;
             navigator.clipboard.writeText(link);
-            alert("Referral Link Copied!");
+            alert("Referral Link Copied! Ab dosto ko bhejo.");
         }
 
         function logout() {
-            localStorage.clear();
-            window.location.href = 'index.html';
+            if(confirm("Bhai, logout karna chahte ho?")) {
+                localStorage.clear();
+                window.location.href = 'index.html';
+            }
         }
     </script>
 </body>
