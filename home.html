@@ -8,7 +8,7 @@
     <style>
         :root { --primary: #0066ff; --success: #28a745; --bg: #f2f5f9; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
-        body { background: var(--bg); color: #333; padding-bottom: 90px; }
+        body { background: var(--bg); color: #333; padding-bottom: 100px; }
 
         /* Header Message */
         .top-banner { background: white; padding: 22px 15px; text-align: center; border-bottom: 1px solid #e0e0e0; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
@@ -131,7 +131,6 @@
             const agree = document.getElementById('userAgree').checked;
 
             if (name && phone && agree) {
-                console.log("Details:", { name, phone, task: selectedTask.name });
                 window.location.href = selectedTask.link;
             } else {
                 alert("Please fill all fields and agree to terms!");
