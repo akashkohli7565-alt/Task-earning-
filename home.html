@@ -3,135 +3,141 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - Earn Money</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
-        body { background: #f0f2f5; padding-bottom: 80px; }
-
-        /* Top Header Section */
-        .header { 
-            background: linear-gradient(135deg, #1e88e5, #1565c0); 
-            color: white; padding: 30px 20px; border-radius: 0 0 25px 25px;
-            text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-        }
-        .header h2 { font-size: 20px; margin-bottom: 5px; }
-        .header p { font-size: 14px; opacity: 0.9; }
-        
-        /* Balance Card */
-        .balance-card {
-            background: white; width: 85%; margin: -25px auto 20px;
-            padding: 15px; border-radius: 15px; display: flex; 
-            justify-content: space-around; align-items: center;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.08); color: #333;
-        }
-        .balance-item b { display: block; font-size: 18px; color: #2ecc71; }
-        .balance-item span { font-size: 12px; color: #888; }
-
-        /* Task Section */
-        .section-title { padding: 0 20px; margin-bottom: 10px; font-size: 16px; font-weight: bold; }
-        .task-list { padding: 0 15px; }
-        .task-card { 
-            background: white; border-radius: 15px; padding: 15px; margin-bottom: 12px; 
-            display: flex; align-items: center; justify-content: space-between;
-            border: 1px solid #e0e0e0; cursor: pointer;
-        }
-        .task-left { display: flex; align-items: center; gap: 12px; }
-        .task-logo { width: 50px; height: 50px; border-radius: 10px; object-fit: contain; }
-        .task-info b { font-size: 14px; display: block; }
-        .task-info span { font-size: 11px; color: #1e88e5; font-weight: bold; }
-
-        .price-tag { color: #2ecc71; font-weight: bold; font-size: 17px; }
-
-        /* Bottom Navigation */
-        .bottom-nav { 
-            position: fixed; bottom: 0; width: 100%; background: white; 
-            display: flex; justify-content: space-around; padding: 12px 0; 
-            border-top: 1px solid #eee; box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
-        }
-        .nav-item { text-align: center; text-decoration: none; color: #aaa; font-size: 11px; transition: 0.3s; }
-        .nav-item.active { color: #1e88e5; }
-        .nav-item i { display: block; font-size: 20px; margin-bottom: 3px; }
-
-        /* Modal Style */
-        .modal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:1000; }
-        .modal-content { background:white; width:90%; max-width:380px; margin:20% auto; padding:20px; border-radius:20px; }
-        .apply-btn { width:100%; background:#1e88e5; color:white; border:none; padding:12px; border-radius:10px; margin-top:15px; font-weight:bold; cursor:pointer; }
-    </style>
+    <title>Dashboard | Task Earning</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
 </head>
-<body>
+<body class="dashboard-body">
 
-    <div class="header">
-        <h2>Complete your task to earn money! 💰</h2>
-        <p>Start your journey as a business owner today.</p>
+    <div class="top-nav animate__animated animate__fadeInDown">
+        <div class="nav-item"><span>📥</span><p>Recharge</p></div>
+        <div class="nav-item"><span>📤</span><p>Withdraw</p></div>
+        <div class="nav-item"><span>🎧</span><p>Service</p></div>
+        <div class="nav-item"><span>📞</span><p>Contact</p></div>
     </div>
 
-    <div class="balance-card">
-        <div class="balance-item">
-            <span id="u_phone">User</span>
-            <b>Active</b>
-        </div>
-        <div style="border-left: 1px solid #eee; height: 30px;"></div>
-        <div class="balance-item">
-            <span>Wallet Balance</span>
-            <b>₹0.00</b>
-        </div>
-    </div>
-
-    <p class="section-title">Available Tasks</p>
-
-    <div class="task-list">
-        <div class="task-card" onclick="document.getElementById('m').style.display='block'">
-            <div class="task-left">
-                <img src="https://i.ibb.co/WvS8fcHB/Upstox.webp" class="task-logo" alt="Upstox">
-                <div class="task-info">
-                    <b>Upstox - KYC & Earn</b>
-                    <span>Category: Demat A/c</span>
-                </div>
-            </div>
-            <div class="price-tag">₹100</div>
-        </div>
+    <div class="task-container">
+        <div class="section-title">Investment Tasks</div>
         
-        <div class="task-card" style="opacity: 0.7;">
-            <div class="task-left">
-                <div style="width:50px; height:50px; background:#eee; border-radius:10px; display:flex; align-items:center; justify-content:center;"><i class="fas fa-plus"></i></div>
-                <div class="task-info">
-                    <b>More Tasks Coming Soon</b>
-                    <span>Stay Tuned!</span>
+        <div class="task-card animate__animated animate__fadeInUp">
+            <div class="quota-badge">Quota 0/1</div>
+            <div class="card-header">
+                <img src="https://i.ibb.co/GTP8BvL/upstox.png" alt="Upstox" class="card-logo">
+                <div class="title-area">
+                    <h3>Upstox - KYC & Earn</h3>
+                    <p>New User Special</p>
                 </div>
             </div>
+            
+            <div class="income-grid">
+                <div class="grid-box"><span>Price</span><strong>₹0.00</strong></div>
+                <div class="grid-box"><span>Daily Profit</span><strong style="color:#28a745;">₹100</strong></div>
+                <div class="grid-box"><span>Validity</span><strong>120 Days</strong></div>
+                <div class="grid-box"><span>Total</span><strong>₹12000</strong></div>
+            </div>
+            
+            <button class="action-btn" onclick="triggerTask('Upstox')">🛒 Buy Now</button>
         </div>
     </div>
 
-    <div id="m" class="modal">
-        <div class="modal-content">
-            <h3 style="text-align:center;">Terms & Conditions</h3>
-            <div style="font-size:13px; margin:15px 0; line-height:2;">
-                1️⃣ Must be a New User.<br>
-                2️⃣ Use Mobile Data only.<br>
-                3️⃣ Unique Device & Number.<br>
-                4️⃣ Fraud accounts will be blocked.<br>
+    <div id="taskModal" class="modal-overlay">
+        <div class="modal-card animate__animated animate__zoomIn">
+            <div class="modal-header">
+                <h3>Confirm Your Details</h3>
+                <p>Enter the info you will use on <span id="targetTask">Task</span></p>
             </div>
-            <button class="apply-btn" onclick="location.href='task-detail.html'">I Agree & Start Task</button>
-            <p onclick="document.getElementById('m').style.display='none'" style="text-align:center; margin-top:10px; font-size:12px; color:red; cursor:pointer;">Cancel</p>
+            <div class="modal-body">
+                <div class="input-wrap">
+                    <label>Full Name</label>
+                    <input type="text" id="userName" placeholder="Enter name as per Aadhar">
+                </div>
+                <div class="input-wrap">
+                    <label>Mobile Number</label>
+                    <input type="tel" id="userPhone" placeholder="Enter bank linked number">
+                </div>
+                <div class="agreement">
+                    <input type="checkbox" id="terms">
+                    <label for="terms">I agree to complete the KYC process.</label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="submit-btn" onclick="processTask()">Agree & Start Task</button>
+                <button class="close-btn" onclick="hidePopup()">Maybe Later</button>
+            </div>
         </div>
     </div>
 
     <div class="bottom-nav">
-        <a href="home.html" class="nav-item active"><i class="fas fa-home"></i>Home</a>
-        <a href="referral.html" class="nav-item"><i class="fas fa-users"></i>Referral</a>
-        <a href="tasks.html" class="nav-item"><i class="fas fa-clipboard-list"></i>Tasks</a>
-        <a href="me.html" class="nav-item"><i class="fas fa-user-circle"></i>Me</a>
+        <div class="nav-b-item active">🏠<br>Home</div>
+        <div class="nav-b-item">📊<br>Income</div>
+        <div class="nav-b-item">👥<br>Team</div>
+        <div class="nav-b-item">⚙️<br>My</div>
     </div>
 
     <script>
-        // Username display logic
-        window.onload = function() {
-            const phone = localStorage.getItem('userPhone') || "User";
-            document.getElementById('u_phone').innerText = phone;
+        let activeTask = "";
+
+        // Popup dikhane ke liye
+        function triggerTask(name) {
+            activeTask = name;
+            document.getElementById('targetTask').innerText = name;
+            document.getElementById('taskModal').style.display = 'flex';
+        }
+
+        // Popup chhupane ke liye
+        function hidePopup() {
+            document.getElementById('taskModal').style.display = 'none';
+        }
+
+        // Submit karke detail page par bhejne ke liye
+        function processTask() {
+            const name = document.getElementById('userName').value;
+            const phone = document.getElementById('userPhone').value;
+            const agree = document.getElementById('terms').checked;
+
+            if (name === "" || phone === "") {
+                alert("Bhai, naam aur number toh daalo!");
+                return;
+            }
+            if (!agree) {
+                alert("Please agree to terms first.");
+                return;
+            }
+
+            // Sab sahi hai toh redirect
+            window.location.href = `task-details.html?task=${activeTask}&user=${name}`;
         }
     </script>
 
+    <style>
+        /* CSS for Popup and Better Look */
+        .modal-overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85); z-index: 1000; align-items: center; justify-content: center;
+        }
+        .modal-card {
+            background: white; width: 85%; border-radius: 20px; overflow: hidden;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.4);
+        }
+        .modal-header { background: #f8f9fa; padding: 20px; text-align: center; border-bottom: 1px solid #eee; }
+        .modal-body { padding: 20px; }
+        .input-wrap { margin-bottom: 15px; }
+        .input-wrap label { font-size: 12px; font-weight: bold; color: #666; display: block; margin-bottom: 5px; text-align: left; }
+        .input-wrap input { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 10px; box-sizing: border-box; outline: none; background: #f9f9f9; }
+        .agreement { display: flex; align-items: center; gap: 8px; font-size: 12px; color: #444; margin-top: 10px; }
+        .submit-btn { width: 100%; background: #000; color: white; border: none; padding: 15px; border-radius: 30px; font-weight: bold; cursor: pointer; }
+        .close-btn { width: 100%; background: none; border: none; color: #888; padding: 10px; margin-top: 5px; cursor: pointer; }
+        
+        /* Dashboard Styling */
+        .task-container { padding: 15px; }
+        .section-title { font-weight: bold; margin-bottom: 15px; color: #333; }
+        .task-card { background: white; border-radius: 15px; padding: 15px; margin-bottom: 20px; position: relative; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        .card-header { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; }
+        .card-logo { width: 50px; height: 50px; border-radius: 10px; }
+        .income-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; background: #f8f9fa; padding: 10px; border-radius: 10px; }
+        .grid-box span { font-size: 11px; color: #888; display: block; }
+        .action-btn { width: 100%; background: #333; color: white; border: none; padding: 12px; border-radius: 8px; margin-top: 15px; font-weight: bold; }
+        .quota-badge { position: absolute; top: 10px; right: 10px; background: #ffc107; font-size: 10px; padding: 2px 8px; border-radius: 4px; }
+    </style>
 </body>
 </html>
-
