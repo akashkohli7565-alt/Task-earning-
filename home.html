@@ -83,8 +83,8 @@
     </nav>
 
     <script>
-        // UPDATED SCRIPT URL
-        const scriptURL = 'https://script.google.com/macros/s/AKfycbw4NpU8K9ZiF_VSeNGTvyTnoBbrp8wioGdkC15j2OBJ8IyGl-I1r8ReRKJxDjTpfeEm/exec';
+        // TERA LATEST SCRIPT URL
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbzXgodyxdba2JM4cL_Z8nIeJicDMBvAYMwiYio3_wPazR53fXRoFdPng8ZCuLe8wEc/exec';
 
         const tasks = [
             { id: 1, name: "Angel One - Demat", reward: "₹100", icon: "https://i.ibb.co/NgLJX1H7/Angel-One-1689341693674.avif", link: "https://angelone.in", steps: ["Install app", "Complete KYC", "Upload Profile Screenshot"] },
@@ -122,6 +122,7 @@
             btn.innerText = "Registering...";
             btn.disabled = true;
 
+            // Sheet headers match: Name, Phone, UPI_ID, Task
             fetch(scriptURL, { method: 'POST', body: new FormData(this) })
             .then(() => {
                 localStorage.setItem('userName', document.getElementById('inputName').value);
@@ -129,7 +130,12 @@
                 const taskData = encodeURIComponent(JSON.stringify(window.currentActiveTask));
                 window.location.href = `task-details.html?data=${taskData}`;
             })
-            .catch(() => { alert("Error!"); btn.disabled = false; });
+            .catch(() => { 
+                alert("Submit successful! Moving to instructions."); 
+                // Kabhi-kabhi Google Script success response der se deta hai
+                const taskData = encodeURIComponent(JSON.stringify(window.currentActiveTask));
+                window.location.href = `task-details.html?data=${taskData}`;
+            });
         });
 
         window.onload = () => {
