@@ -12,37 +12,26 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
         body { background-color: var(--bg); color: var(--text-main); padding-bottom: 100px; }
 
-        /* Header */
         .header { background: var(--white); padding: 25px 20px; border-bottom-left-radius: 35px; border-bottom-right-radius: 35px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); display: flex; justify-content: space-between; align-items: center; }
         .header h1 { font-size: 24px; font-weight: 800; color: var(--primary); }
 
-        /* Balance Card */
         .balance-container { padding: 20px; }
         .balance-card { background: linear-gradient(135deg, var(--primary), #4d94ff); padding: 30px; border-radius: 25px; color: white; position: relative; overflow: hidden; box-shadow: 0 15px 35px rgba(0, 102, 255, 0.25); }
-        .balance-label { font-size: 14px; opacity: 0.9; font-weight: 500; }
         .balance-amount { font-size: 36px; font-weight: 800; margin-top: 5px; }
 
-        /* Task Section */
         .section-title { padding: 10px 25px; font-size: 18px; font-weight: 700; display: flex; align-items: center; gap: 10px; }
         .task-list { padding: 0 20px; }
         .task-card { background: var(--white); border-radius: 20px; padding: 18px; margin-bottom: 15px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 5px 15px rgba(0,0,0,0.02); }
         .task-brand { display: flex; align-items: center; gap: 15px; }
-        .task-logo { width: 55px; height: 55px; border-radius: 14px; object-fit: cover; background: #f0f0f0; }
-        .task-details h3 { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
-        .task-reward { color: var(--success); font-size: 13px; font-weight: 700; background: rgba(40, 167, 69, 0.1); padding: 2px 8px; border-radius: 6px; display: inline-block; }
-        .btn-start { background: var(--primary); color: white; border: none; padding: 10px 20px; border-radius: 12px; font-weight: 700; font-size: 14px; cursor: pointer; }
+        .task-logo { width: 55px; height: 55px; border-radius: 14px; object-fit: cover; }
+        .task-reward { color: var(--success); font-size: 13px; font-weight: 700; background: rgba(40, 167, 69, 0.1); padding: 2px 8px; border-radius: 6px; }
 
-        /* Modal */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: none; align-items: center; justify-content: center; z-index: 1000; backdrop-filter: blur(5px); }
         .modal-content { background: var(--white); width: 90%; max-width: 400px; border-radius: 30px; padding: 30px; position: relative; }
-        .form-group { margin-bottom: 20px; }
-        .form-group label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 8px; color: var(--text-sub); }
-        .form-group input { width: 100%; padding: 14px; border: 2px solid #f0f0f0; border-radius: 12px; outline: none; font-size: 15px; }
         .btn-submit { width: 100%; background: var(--primary); color: white; border: none; padding: 16px; border-radius: 15px; font-weight: 700; font-size: 16px; cursor: pointer; }
 
-        /* Bottom Nav */
         .bottom-nav { position: fixed; bottom: 0; width: 100%; background: var(--white); display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #eee; z-index: 900; }
-        .nav-item { text-decoration: none; color: #bbb; display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 11px; font-weight: 600; }
+        .nav-item { text-decoration: none; color: #bbb; display: flex; flex-direction: column; align-items: center; font-size: 11px; font-weight: 600; }
         .nav-item.active { color: var(--primary); }
     </style>
 </head>
@@ -57,96 +46,51 @@
 
     <div class="balance-container">
         <div class="balance-card">
-            <p class="balance-label">Total Wallet Balance</p>
+            <p style="font-size: 14px; opacity: 0.9;">Total Wallet Balance</p>
             <h2 class="balance-amount" id="mainBalance">₹0.00</h2>
         </div>
     </div>
 
-    <div class="section-title">
-        <i class="fa-solid fa-fire" style="color: #ff9500;"></i> Top Earning Tasks
-    </div>
-
+    <div class="section-title"><i class="fa-solid fa-fire" style="color: #ff9500;"></i> Top Earning Tasks</div>
     <div class="task-list" id="dynamicTasks"></div>
 
     <div class="modal-overlay" id="taskModal">
         <div class="modal-content">
             <div style="text-align: center; margin-bottom: 20px;">
                 <h2 id="modalTaskName">Task Name</h2>
-                <p style="color: #888; font-size: 13px;">Bas ye details bharein aur task shuru karein</p>
+                <p style="color: #888; font-size: 13px;">Details bharein aur task shuru karein</p>
             </div>
-
             <form id="googleSheetForm">
-                <div class="form-group">
-                    <label>Aapka Naam</label>
-                    <input type="text" name="Name" id="inputName" placeholder="Pura naam likhein" required>
+                <div style="margin-bottom:15px;">
+                    <label style="display:block; font-size:12px; margin-bottom:5px;">Aapka Naam</label>
+                    <input type="text" name="Name" id="inputName" style="width:100%; padding:12px; border:1px solid #ddd; border-radius:10px;" required>
                 </div>
-                <div class="form-group">
-                    <label>WhatsApp Number</label>
-                    <input type="number" name="Phone" id="inputPhone" placeholder="10 digit mobile number" required>
+                <div style="margin-bottom:15px;">
+                    <label style="display:block; font-size:12px; margin-bottom:5px;">WhatsApp Number</label>
+                    <input type="number" name="Phone" id="inputPhone" style="width:100%; padding:12px; border:1px solid #ddd; border-radius:10px;" required>
                 </div>
-
                 <input type="hidden" name="Task" id="hiddenTaskName">
                 <input type="hidden" name="UPI_ID" id="hiddenUPI">
-
                 <button type="submit" class="btn-submit" id="loaderBtn">Proceed to Instructions</button>
             </form>
-            <p onclick="closeModal()" style="text-align:center; margin-top:15px; color:#999; cursor:pointer; font-size:14px;">Abhi nahi</p>
+            <p onclick="closeModal()" style="text-align:center; margin-top:15px; color:#999; cursor:pointer;">Abhi nahi</p>
         </div>
     </div>
 
     <nav class="bottom-nav">
-        <a href="home.html" class="nav-item active">
-            <i class="fa-solid fa-house"></i><span>Home</span>
-        </a>
-        <a href="profile.html" class="nav-item">
-            <i class="fa-solid fa-user"></i><span>Profile</span>
-        </a>
+        <a href="home.html" class="nav-item active"><i class="fa-solid fa-house"></i><span>Home</span></a>
+        <a href="profile.html" class="nav-item"><i class="fa-solid fa-user"></i><span>Profile</span></a>
     </nav>
 
     <script>
-        const scriptURL = 'https://script.google.com/macros/s/AKfycbwF9opapqWshWQxsiLYC2WQHd2OXPkYT0GpTnaOGE9T7tRUSUgtjmSWWTbithXrZESe/exec';
+        // UPDATED SCRIPT URL
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbw4NpU8K9ZiF_VSeNGTvyTnoBbrp8wioGdkC15j2OBJ8IyGl-I1r8ReRKJxDjTpfeEm/exec';
 
-        // Tasks with Custom Steps
         const tasks = [
-            { 
-                id: 1, 
-                name: "Angel One - Demat", 
-                reward: "₹100", 
-                icon: "https://i.ibb.co/NgLJX1H7/Angel-One-1689341693674.avif", 
-                link: "https://angelone.in",
-                steps: [
-                    "Diye gaye link se Angel One App install karein.",
-                    "Apne PAN Card aur Aadhar se KYC process pura karein.",
-                    "Account open hone ke baad Profile section ka screenshot lein."
-                ] 
-            },
-            { 
-                id: 2, 
-                name: "Upstox - Demat", 
-                reward: "₹100", 
-                icon: "https://i.ibb.co/G3dPNW2Q/Upstox.webp", 
-                link: "https://upstox.com",
-                steps: [
-                    "Link par click karke Upstox download karein.",
-                    "Mobile number aur email verify karke KYC puri karein.",
-                    "Congratulations screen ka screenshot lekar submit karein."
-                ] 
-            },
-            { 
-                id: 3, 
-                name: "Navi UPI", 
-                reward: "₹30", 
-                icon: "https://i.ibb.co/d0LgVNX1/navi-technologies-app-icon.png", 
-                link: "https://navi.com",
-                steps: [
-                    "Navi app install karke UPI setup karein.",
-                    "Kisi bhi number par ₹1 ka transaction karein.",
-                    "Transaction history ka screenshot lekar upload karein."
-                ] 
-            }
+            { id: 1, name: "Angel One - Demat", reward: "₹100", icon: "https://i.ibb.co/NgLJX1H7/Angel-One-1689341693674.avif", link: "https://angelone.in", steps: ["Install app", "Complete KYC", "Upload Profile Screenshot"] },
+            { id: 2, name: "Upstox - Demat", reward: "₹100", icon: "https://i.ibb.co/G3dPNW2Q/Upstox.webp", link: "https://upstox.com", steps: ["Download app", "Verify Aadhar/PAN", "Upload Congratulations Screen"] },
+            { id: 3, name: "Navi UPI", reward: "₹30", icon: "https://i.ibb.co/d0LgVNX1/navi-technologies-app-icon.png", link: "https://navi.com", steps: ["Setup UPI", "Send ₹1 to any contact", "Upload History Screenshot"] }
         ];
-
-        let currentActiveTask = null;
 
         function renderTasks() {
             const container = document.getElementById('dynamicTasks');
@@ -154,60 +98,45 @@
                 <div class="task-card">
                     <div class="task-brand">
                         <img src="${task.icon}" class="task-logo">
-                        <div class="task-details">
-                            <h3>${task.name}</h3>
-                            <span class="task-reward">Reward: ${task.reward}</span>
-                        </div>
+                        <div class="task-details"><h3>${task.name}</h3><span class="task-reward">Reward: ${task.reward}</span></div>
                     </div>
-                    <button class="btn-start" onclick="openTaskModal(${task.id})">Start</button>
+                    <button style="background:var(--primary); color:white; border:none; padding:8px 15px; border-radius:10px; font-weight:700;" onclick="openTaskModal(${task.id})">Start</button>
                 </div>
             `).join('');
         }
 
-        window.onload = () => {
-            renderTasks();
-            // Pre-fill Name and Phone if available in local memory
-            if(localStorage.getItem('userName')) document.getElementById('inputName').value = localStorage.getItem('userName');
-            if(localStorage.getItem('userPhone')) document.getElementById('inputPhone').value = localStorage.getItem('userPhone');
-        };
-
         function openTaskModal(id) {
-            currentActiveTask = tasks.find(t => t.id === id);
-            document.getElementById('modalTaskName').innerText = currentActiveTask.name;
-            document.getElementById('hiddenTaskName').value = currentActiveTask.name;
-            
-            // Profile page wali UPI ID automatically uthana
-            document.getElementById('hiddenUPI').value = localStorage.getItem('userUPI') || "UPI Not Set";
-            
+            const task = tasks.find(t => t.id === id);
+            document.getElementById('modalTaskName').innerText = task.name;
+            document.getElementById('hiddenTaskName').value = task.name;
+            document.getElementById('hiddenUPI').value = localStorage.getItem('userUPI') || "Not Linked";
             document.getElementById('taskModal').style.display = 'flex';
+            window.currentActiveTask = task;
         }
 
-        function closeModal() {
-            document.getElementById('taskModal').style.display = 'none';
-        }
+        function closeModal() { document.getElementById('taskModal').style.display = 'none'; }
 
         document.getElementById('googleSheetForm').addEventListener('submit', function(e) {
             e.preventDefault();
             const btn = document.getElementById('loaderBtn');
-            btn.innerText = "Registering Task...";
+            btn.innerText = "Registering...";
             btn.disabled = true;
 
             fetch(scriptURL, { method: 'POST', body: new FormData(this) })
-            .then(res => {
-                // Save user details for next time
+            .then(() => {
                 localStorage.setItem('userName', document.getElementById('inputName').value);
                 localStorage.setItem('userPhone', document.getElementById('inputPhone').value);
-
-                // Naye page (task-details.html) par bhej do instructions ke saath
-                const taskData = encodeURIComponent(JSON.stringify(currentActiveTask));
+                const taskData = encodeURIComponent(JSON.stringify(window.currentActiveTask));
                 window.location.href = `task-details.html?data=${taskData}`;
             })
-            .catch(err => {
-                alert("Internet Error! Try again.");
-                btn.innerText = "Proceed to Instructions";
-                btn.disabled = false;
-            });
+            .catch(() => { alert("Error!"); btn.disabled = false; });
         });
+
+        window.onload = () => {
+            renderTasks();
+            if(localStorage.getItem('userName')) document.getElementById('inputName').value = localStorage.getItem('userName');
+            if(localStorage.getItem('userPhone')) document.getElementById('inputPhone').value = localStorage.getItem('userPhone');
+        };
     </script>
 </body>
 </html>
