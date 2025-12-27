@@ -3,49 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Earn Real Money - Tasks</title>
+    <title>Earn Real Money - Dashboard</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         :root { --primary: #0066ff; --success: #28a745; --bg: #f2f5f9; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
         body { background: var(--bg); color: #333; padding-bottom: 100px; }
 
-        /* Header Message */
+        /* Banner */
         .top-banner { background: white; padding: 22px 15px; text-align: center; border-bottom: 1px solid #e0e0e0; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
         .top-banner h2 { font-size: 17px; color: #1a1a1a; font-weight: 700; line-height: 1.4; }
 
-        /* Task Container */
+        /* Task List */
         .container { padding: 15px; }
-        .task-card { background: white; border-radius: 18px; padding: 16px; margin-bottom: 15px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 4px 15px rgba(0,0,0,0.04); cursor: pointer; transition: 0.2s; border: 1px solid transparent; }
-        .task-card:active { transform: scale(0.97); background: #fafafa; }
+        .task-card { background: white; border-radius: 18px; padding: 16px; margin-bottom: 15px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 4px 15px rgba(0,0,0,0.04); cursor: pointer; border: 1px solid transparent; }
         
         .task-left { display: flex; align-items: center; gap: 14px; }
         .task-icon { width: 55px; height: 55px; border-radius: 14px; object-fit: contain; padding: 4px; border: 1px solid #f0f0f0; }
-        .task-info h3 { font-size: 15px; font-weight: 700; margin-bottom: 5px; color: #222; }
-        .time-tag { font-size: 11px; color: #666; background: #f0f3f7; padding: 3px 8px; border-radius: 6px; font-weight: 500; }
-        
-        .task-right { text-align: right; }
-        .reward-amt { font-size: 19px; font-weight: 800; color: var(--success); margin-bottom: 4px; }
-        .status-tag { font-size: 10px; color: white; background: #ff9800; padding: 2px 7px; border-radius: 4px; font-weight: bold; text-transform: uppercase; }
+        .task-info h3 { font-size: 15px; font-weight: 700; color: #222; }
+        .reward-amt { font-size: 19px; font-weight: 800; color: var(--success); }
 
-        /* Popup Logic */
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.75); z-index: 1000; align-items: center; justify-content: center; padding: 25px; backdrop-filter: blur(4px); }
-        .modal-box { background: white; width: 100%; max-width: 380px; border-radius: 28px; padding: 30px; text-align: center; animation: popUp 0.3s ease-out; }
-        @keyframes popUp { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-        
-        .modal-box h3 { font-size: 22px; margin-bottom: 8px; font-weight: 700; }
-        .modal-box p { font-size: 13px; color: #666; margin-bottom: 22px; }
-        .modal-box input { width: 100%; padding: 15px; margin-bottom: 12px; border: 1.5px solid #eee; border-radius: 14px; font-size: 15px; outline: none; background: #fbfbfb; transition: 0.3s; }
-        .modal-box input:focus { border-color: var(--primary); background: white; }
-        
-        .agree-wrap { display: flex; align-items: center; gap: 10px; font-size: 12px; color: #555; margin: 10px 0 20px; text-align: left; }
-        .submit-btn { width: 100%; background: #000; color: white; border: none; padding: 16px; border-radius: 14px; font-weight: 700; font-size: 16px; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
-        
-        /* Bottom Menu Fixed - Yahan Linking Sahi Ki Hai */
+        /* Bottom Nav Fix */
         .bottom-nav { position: fixed; bottom: 0; width: 100%; background: white; display: flex; justify-content: space-around; align-items: center; padding: 12px 0; border-top: 1px solid #eee; box-shadow: 0 -4px 15px rgba(0,0,0,0.03); z-index: 100; }
         .nav-item { text-align: center; font-size: 11px; color: #a0a0a0; flex: 1; text-decoration: none; display: flex; flex-direction: column; align-items: center; }
         .nav-item.active { color: var(--primary); font-weight: 700; }
-        .nav-item.ref-btn { background: var(--primary); color: white !important; padding: 10px; border-radius: 15px; margin: 0 10px; flex: 1.3; box-shadow: 0 4px 10px rgba(0,102,255,0.3); }
+        .nav-item.ref-btn { background: var(--primary); color: white !important; padding: 10px; border-radius: 15px; margin: 0 10px; flex: 1.3; }
         .nav-item span { font-size: 20px; margin-bottom: 2px; }
     </style>
 </head>
@@ -55,22 +37,8 @@
         <h2>Complete your task and earn real money</h2>
     </div>
 
-    <div class="container" id="taskList"></div>
-
-    <div id="taskModal" class="modal">
-        <div class="modal-box">
-            <h3 id="modalTitle">Confirm Identity</h3>
-            <p>Enter the details you will use for this account opening.</p>
-            <input type="text" id="userName" placeholder="Full Name (As per Aadhar)">
-            <input type="tel" id="userPhone" placeholder="Mobile Number">
-            <div class="agree-wrap">
-                <input type="checkbox" id="userAgree">
-                <label for="userAgree">I agree to complete the KYC and submit proof.</label>
-            </div>
-            <button class="submit-btn" onclick="handleTaskSubmission()">Agree & Start Task</button>
-            <p style="font-size: 13px; color: #999; margin-top: 18px; cursor: pointer;" onclick="closePopup()">Cancel</p>
+    <div class="container" id="taskList">
         </div>
-    </div>
 
     <div class="bottom-nav">
         <a href="home.html" class="nav-item active">
@@ -93,49 +61,21 @@
 
     <script>
         const tasks = [
-            { id: 1, name: "Angel One - Demat Account", reward: "₹100", time: "15 min", icon: "https://i.ibb.co/NgLJX1H7/Angel-One-1689341693674.avif", link: "https://angelone.in" },
-            { id: 2, name: "Upstox - KYC & Earn", reward: "₹100", time: "10 min", icon: "https://i.ibb.co/G3dPNW2Q/Upstox.webp", link: "https://upstox.com" },
-            { id: 3, name: "Navi UPI - Activation", reward: "₹30", time: "2 min", icon: "https://i.ibb.co/d0LgVNX1/navi-technologies-app-icon.png", link: "https://navi.com" }
+            { id: 1, name: "Angel One - Demat Account", reward: "₹100", icon: "https://i.ibb.co/NgLJX1H7/Angel-One-1689341693674.avif" },
+            { id: 2, name: "Upstox - KYC & Earn", reward: "₹100", icon: "https://i.ibb.co/G3dPNW2Q/Upstox.webp" }
         ];
-
-        let selectedTask = null;
 
         function renderTasks() {
             const list = document.getElementById('taskList');
             list.innerHTML = tasks.map(task => `
-                <div class="task-card" onclick="openPopup(${task.id})">
+                <div class="task-card">
                     <div class="task-left">
                         <img src="${task.icon}" class="task-icon">
-                        <div class="task-info">
-                            <h3>${task.name}</h3>
-                            <span class="time-tag">⌛ ${task.time}</span>
-                        </div>
+                        <div class="task-info"><h3>${task.name}</h3></div>
                     </div>
-                    <div class="task-right">
-                        <div class="reward-amt">${task.reward}</div>
-                        <span class="status-tag">Live</span>
-                    </div>
+                    <div class="reward-amt">${task.reward}</div>
                 </div>
             `).join('');
-        }
-
-        function openPopup(id) {
-            selectedTask = tasks.find(t => t.id === id);
-            document.getElementById('modalTitle').innerText = selectedTask.name;
-            document.getElementById('taskModal').style.display = 'flex';
-        }
-
-        function closePopup() { document.getElementById('taskModal').style.display = 'none'; }
-
-        function handleTaskSubmission() {
-            const name = document.getElementById('userName').value;
-            const phone = document.getElementById('userPhone').value;
-            const agree = document.getElementById('userAgree').checked;
-            if (name && phone && agree) {
-                window.location.href = selectedTask.link;
-            } else {
-                alert("Please fill all fields!");
-            }
         }
         renderTasks();
     </script>
