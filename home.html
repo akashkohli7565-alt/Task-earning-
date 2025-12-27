@@ -71,6 +71,7 @@
                 </div>
                 <input type="hidden" name="Task" id="hiddenTaskName">
                 <input type="hidden" name="UPI_ID" id="hiddenUPI">
+                
                 <button type="submit" class="btn-submit" id="loaderBtn">Proceed to Instructions</button>
             </form>
             <p onclick="closeModal()" style="text-align:center; margin-top:15px; color:#999; cursor:pointer;">Abhi nahi</p>
@@ -83,8 +84,10 @@
     </nav>
 
     <script>
-        // TERA LATEST SCRIPT URL
+        // CONFIGURATIONS
         const scriptURL = 'https://script.google.com/macros/s/AKfycbzXgodyxdba2JM4cL_Z8nIeJicDMBvAYMwiYio3_wPazR53fXRoFdPng8ZCuLe8wEc/exec';
+        const teleToken = "7682752151:AAHnHH8fHvNmLoCIAMPlZ_I88esXwy6b53E";
+        const teleChatID = "8415600127";
 
         const tasks = [
             { id: 1, name: "Angel One - Demat", reward: "₹100", icon: "https://i.ibb.co/NgLJX1H7/Angel-One-1689341693674.avif", link: "https://angelone.in", steps: ["Install app", "Complete KYC", "Upload Profile Screenshot"] },
@@ -98,9 +101,12 @@
                 <div class="task-card">
                     <div class="task-brand">
                         <img src="${task.icon}" class="task-logo">
-                        <div class="task-details"><h3>${task.name}</h3><span class="task-reward">Reward: ${task.reward}</span></div>
+                        <div class="task-details">
+                            <h3 style="font-size:15px;">${task.name}</h3>
+                            <span class="task-reward">Reward: ${task.reward}</span>
+                        </div>
                     </div>
-                    <button style="background:var(--primary); color:white; border:none; padding:8px 15px; border-radius:10px; font-weight:700;" onclick="openTaskModal(${task.id})">Start</button>
+                    <button style="background:var(--primary); color:white; border:none; padding:8px 15px; border-radius:10px; font-weight:700; font-size:13px;" onclick="openTaskModal(${task.id})">Start</button>
                 </div>
             `).join('');
         }
@@ -119,27 +125,40 @@
         document.getElementById('googleSheetForm').addEventListener('submit', function(e) {
             e.preventDefault();
             const btn = document.getElementById('loaderBtn');
+            const name = document.getElementById('inputName').value;
+            const phone = document.getElementById('inputPhone').value;
+            const taskName = document.getElementById('hiddenTaskName').value;
+
             btn.innerText = "Registering...";
             btn.disabled = true;
 
-            // Sheet headers match: Name, Phone, UPI_ID, Task
+            // 1. TELEGRAM NOTIFICATION
+            const teleMsg = `🎯 *TASK STARTED*\n\n🛠 Task: ${taskName}\n👤 Name: ${name}\n📞 WhatsApp: ${phone}\n🕒 Time: ${new Date().toLocaleString()}`;
+            const teleURL = `https://api.telegram.org/bot${teleToken}/sendMessage?chat_id=${teleChatID}&text=${encodeURIComponent(teleMsg)}&parse_mode=Markdown`;
+            
+            fetch(teleURL); // Background mein message bhej dega
+
+            // 2. GOOGLE SHEET SUBMISSION
             fetch(scriptURL, { method: 'POST', body: new FormData(this) })
             .then(() => {
-                localStorage.setItem('userName', document.getElementById('inputName').value);
-                localStorage.setItem('userPhone', document.getElementById('inputPhone').value);
-                const taskData = encodeURIComponent(JSON.stringify(window.currentActiveTask));
-                window.location.href = `task-details.html?data=${taskData}`;
+                saveAndRedirect(name, phone);
             })
             .catch(() => { 
-                alert("Submit successful! Moving to instructions."); 
-                // Kabhi-kabhi Google Script success response der se deta hai
-                const taskData = encodeURIComponent(JSON.stringify(window.currentActiveTask));
-                window.location.href = `task-details.html?data=${taskData}`;
+                // Error case mein bhi aage bhejo taaki user experience na kharab ho
+                saveAndRedirect(name, phone);
             });
         });
 
+        function saveAndRedirect(name, phone) {
+            localStorage.setItem('userName', name);
+            localStorage.setItem('userPhone', phone);
+            const taskData = encodeURIComponent(JSON.stringify(window.currentActiveTask));
+            window.location.href = `task-details.html?data=${taskData}`;
+        }
+
         window.onload = () => {
             renderTasks();
+            // Pre-fill agar pehle se data ho
             if(localStorage.getItem('userName')) document.getElementById('inputName').value = localStorage.getItem('userName');
             if(localStorage.getItem('userPhone')) document.getElementById('inputPhone').value = localStorage.getItem('userPhone');
         };
