@@ -21,7 +21,9 @@
         .copy-box { background: #000; padding: 12px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border: 1px solid #333; }
         .btn-copy { background: var(--accent); color: #000; border: none; padding: 5px 12px; border-radius: 6px; font-weight: 800; cursor: pointer; }
         input { width: 100%; padding: 15px; border-radius: 12px; border: 1px solid #444; background: #000; color: #fff; font-size: 18px; text-align: center; margin-bottom: 15px; outline: none; }
-        .btn-submit { background: #00ff88; color: #000; width: 100%; padding: 14px; border: none; border-radius: 12px; font-weight: 700; font-size: 15px; cursor: pointer; }
+        .btn-submit { background: #00ff88; color: #000; width: 100%; padding: 14px; border: none; border-radius: 12px; font-weight: 700; font-size: 15px; cursor: pointer; transition: 0.3s; }
+        .btn-submit:disabled { background: #444; cursor: not-allowed; }
+        
         #successBox { display: none; text-align: center; background: rgba(0, 255, 136, 0.1); border: 1px solid #00ff88; padding: 20px; border-radius: 15px; }
     </style>
 </head>
@@ -35,7 +37,7 @@
             </div>
 
             <div class="amount-box">
-                <h1 id="payAmt">₹ 120</h1>
+                <h1 id="payAmt">₹ 0.00</h1>
             </div>
 
             <div class="qr-section">
@@ -100,26 +102,30 @@
 
         async function submitData() {
             const utr = document.getElementById('utrInput').value;
-            if(utr.length < 10) { alert("Sahi UTR dalo!"); return; }
+            
+            if(utr.length < 10) { 
+                alert("Bhai, kam se kam 10 ya 12 digit ka sahi UTR dalo!"); 
+                return; 
+            }
 
-            // Loading state
-            document.getElementById('submitBtn').innerText = "Verifying...";
-            document.getElementById('submitBtn').disabled = true;
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.innerText = "Please Wait...";
+            submitBtn.disabled = true;
 
-            // --- REFERRAL LOGIC START ---
+            // --- REFERRAL LOGIC ---
             try {
                 const snapshot = await database.ref('users/' + myPhone).once('value');
                 const userData = snapshot.val();
 
-                // Check karo agar banda pehli baar plan le rha h
-                if (userData && !userData.hasPlan) {
+                // Check: Kya ye banda pehli baar recharge kar raha hai?
+                if (userData && userData.hasPlan !== true) {
                     const inviterPhone = userData.invitedBy;
 
-                    // Agar inviter exist karta h aur "none" nahi h
+                    // Agar koi inviter hai aur wo "none" nahi hai
                     if (inviterPhone && inviterPhone !== "none") {
                         const inviterRef = database.ref('users/' + inviterPhone);
                         
-                        // Inviter ka refCount +1 karo
+                        // Transaction se count +1 karein (Safe way)
                         await inviterRef.transaction((inviter) => {
                             if (inviter) {
                                 inviter.refCount = (inviter.refCount || 0) + 1;
@@ -128,26 +134,44 @@
                         });
                     }
 
-                    // User ka status update karo ki ab iska plan aa chuka h
+                    // User ka status 'hasPlan: true' kar do taaki dubara referral na mile
                     await database.ref('users/' + myPhone).update({ hasPlan: true });
                 }
             } catch (err) {
-                console.error("Referral Error:", err);
+                console.log("Referral error or no inviter found.");
             }
-            // --- REFERRAL LOGIC END ---
 
-            // UI Changes
-            document.getElementById('mainUI').style.display = 'none';
-            document.getElementById('successBox').style.display = 'block';
-
-            // Telegram Notification
+            // --- TELEGRAM NOTIFICATION (FIXED SYMBOLS) ---
             const token = "7682752151:AAHnHH8fHvNmLoCIAMPlZ_I88esXwy6b53E";
             const chat_id = "8415600127";
-            const msg = `💰 RECHARGE REQUEST\n\n👤 Name: ${myName}\n📞 Phone: ${myPhone}\n💵 Amt: ₹${amount}\n🔢 UTR: ${utr}\n✅ First Plan: ${new Date().toLocaleDateString()}`;
+            
+            const msg = `<b>💰 NEW RECHARGE REQUEST</b>\n\n` +
+                        `👤 <b>Name:</b> ${myName}\n` +
+                        `📞 <b>Phone:</b> ${myPhone}\n` +
+                        `💵 <b>Amt:</b> ₹${amount}\n` +
+                        `🔢 <b>UTR:</b> <code>${utr}</code>`;
 
-            fetch(`https://api.telegram.org/bot${token}/sendMessage?chat_id=${chat_id}&text=${encodeURIComponent(msg)}`);
+            const telegramUrl = `https://api.telegram.org/bot${token}/sendMessage?chat_id=${chat_id}&text=${encodeURIComponent(msg)}&parse_mode=HTML`;
 
-            setTimeout(() => { window.location.href = 'home.html'; }, 3000);
+            try {
+                const response = await fetch(telegramUrl);
+                const resData = await response.json();
+
+                if (resData.ok) {
+                    // Success UI
+                    document.getElementById('mainUI').style.display = 'none';
+                    document.getElementById('successBox').style.display = 'block';
+                    setTimeout(() => { window.location.href = 'home.html'; }, 3000);
+                } else {
+                    alert("Telegram Error: Bot ko start karein!");
+                    submitBtn.innerText = "SUBMIT RECHARGE";
+                    submitBtn.disabled = false;
+                }
+            } catch (error) {
+                alert("Network Error! Message nahi gaya.");
+                submitBtn.innerText = "SUBMIT RECHARGE";
+                submitBtn.disabled = false;
+            }
         }
     </script>
 </body>
