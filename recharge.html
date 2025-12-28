@@ -16,7 +16,6 @@
         .qr-section { background: #fff; padding: 15px; border-radius: 15px; text-align: center; margin-bottom: 15px; }
         .qr-img { width: 180px; height: 180px; border-radius: 10px; margin-bottom: 10px; }
         
-        /* New Download Button Style */
         .btn-download { background: #25d366; color: white; border: none; padding: 12px 20px; border-radius: 10px; font-weight: bold; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; font-size: 14px; width: 100%; justify-content: center; }
         
         .copy-box { background: #000; padding: 12px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border: 1px solid #333; }
@@ -65,26 +64,31 @@
         </div>
     </div>
 
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
+
     <script>
+        // Firebase Config
+        const firebaseConfig = { databaseURL: "https://earn-money-6891a-default-rtdb.firebaseio.com/" };
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
         const amount = localStorage.getItem('rechargeAmount') || 120;
+        const myPhone = localStorage.getItem('userPhone');
+        const myName = localStorage.getItem('userName');
+        
         document.getElementById('payAmt').innerText = "₹ " + amount;
 
-        // Force Download Function
         function downloadQR() {
             const imageUrl = "https://i.ibb.co/gZr0YxVH/Screenshot-20251227-164755.jpg";
-            fetch(imageUrl)
-                .then(response => response.blob())
-                .then(blob => {
-                    const url = window.URL.createObjectURL(blob);
-                    const a = document.createElement('a');
-                    a.href = url;
-                    a.download = "Payment_QR.jpg"; // File name for gallery
-                    document.body.appendChild(a);
-                    a.click();
-                    window.URL.revokeObjectURL(url);
-                    document.body.removeChild(a);
-                })
-                .catch(() => alert("Download failed! Please take a screenshot."));
+            fetch(imageUrl).then(r => r.blob()).then(blob => {
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url; a.download = "Payment_QR.jpg";
+                document.body.appendChild(a); a.click();
+                window.URL.revokeObjectURL(url);
+                document.body.removeChild(a);
+            }).catch(() => alert("Download failed! Screenshot le lo bhai."));
         }
 
         function copyUPI() {
@@ -94,16 +98,52 @@
             setTimeout(() => { btn.innerText = "COPY"; }, 2000);
         }
 
-        function submitData() {
+        async function submitData() {
             const utr = document.getElementById('utrInput').value;
             if(utr.length < 10) { alert("Sahi UTR dalo!"); return; }
 
+            // Loading state
+            document.getElementById('submitBtn').innerText = "Verifying...";
+            document.getElementById('submitBtn').disabled = true;
+
+            // --- REFERRAL LOGIC START ---
+            try {
+                const snapshot = await database.ref('users/' + myPhone).once('value');
+                const userData = snapshot.val();
+
+                // Check karo agar banda pehli baar plan le rha h
+                if (userData && !userData.hasPlan) {
+                    const inviterPhone = userData.invitedBy;
+
+                    // Agar inviter exist karta h aur "none" nahi h
+                    if (inviterPhone && inviterPhone !== "none") {
+                        const inviterRef = database.ref('users/' + inviterPhone);
+                        
+                        // Inviter ka refCount +1 karo
+                        await inviterRef.transaction((inviter) => {
+                            if (inviter) {
+                                inviter.refCount = (inviter.refCount || 0) + 1;
+                            }
+                            return inviter;
+                        });
+                    }
+
+                    // User ka status update karo ki ab iska plan aa chuka h
+                    await database.ref('users/' + myPhone).update({ hasPlan: true });
+                }
+            } catch (err) {
+                console.error("Referral Error:", err);
+            }
+            // --- REFERRAL LOGIC END ---
+
+            // UI Changes
             document.getElementById('mainUI').style.display = 'none';
             document.getElementById('successBox').style.display = 'block';
 
+            // Telegram Notification
             const token = "7682752151:AAHnHH8fHvNmLoCIAMPlZ_I88esXwy6b53E";
             const chat_id = "8415600127";
-            const msg = `💰 RECHARGE\n\n👤 Name: ${localStorage.getItem('userName')}\n📞 Phone: ${localStorage.getItem('userPhone')}\n💵 Amt: ₹${amount}\n🔢 UTR: ${utr}`;
+            const msg = `💰 RECHARGE REQUEST\n\n👤 Name: ${myName}\n📞 Phone: ${myPhone}\n💵 Amt: ₹${amount}\n🔢 UTR: ${utr}\n✅ First Plan: ${new Date().toLocaleDateString()}`;
 
             fetch(`https://api.telegram.org/bot${token}/sendMessage?chat_id=${chat_id}&text=${encodeURIComponent(msg)}`);
 
