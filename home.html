@@ -30,9 +30,10 @@
         .modal-content { background: var(--white); width: 90%; max-width: 400px; border-radius: 30px; padding: 30px; position: relative; }
         .btn-submit { width: 100%; background: var(--primary); color: white; border: none; padding: 16px; border-radius: 15px; font-weight: 700; font-size: 16px; cursor: pointer; }
 
+        /* Bottom Nav - Updated for 2 items */
         .bottom-nav { position: fixed; bottom: 0; width: 100%; background: var(--white); display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #eee; z-index: 900; box-shadow: 0 -5px 20px rgba(0,0,0,0.05); }
-        .nav-item { text-decoration: none; color: #bbb; display: flex; flex-direction: column; align-items: center; font-size: 11px; font-weight: 600; flex: 1; transition: 0.3s; }
-        .nav-item i { font-size: 20px; margin-bottom: 4px; }
+        .nav-item { text-decoration: none; color: #bbb; display: flex; flex-direction: column; align-items: center; font-size: 12px; font-weight: 600; flex: 1; transition: 0.3s; }
+        .nav-item i { font-size: 22px; margin-bottom: 4px; }
         .nav-item.active { color: var(--primary); }
     </style>
 </head>
@@ -56,9 +57,12 @@
     <div class="task-list" id="dynamicTasks"></div>
 
     <nav class="bottom-nav">
-        <a href="home.html" class="nav-item active"><i class="fa-solid fa-house"></i><span>Home</span></a>
-        <a href="referral.html" class="nav-item"><i class="fa-solid fa-share-nodes"></i><span>Referral</span></a>
-        <a href="profile.html" class="nav-item"><i class="fa-solid fa-user"></i><span>Profile</span></a>
+        <a href="home.html" class="nav-item active">
+            <i class="fa-solid fa-house"></i><span>Home</span>
+        </a>
+        <a href="profile.html" class="nav-item">
+            <i class="fa-solid fa-user"></i><span>Profile</span>
+        </a>
     </nav>
 
     <div class="modal-overlay" id="taskModal">
@@ -81,7 +85,6 @@
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
 
     <script>
-        // 1. TERA FIREBASE CONFIG
         const firebaseConfig = {
             databaseURL: "https://earn-money-6891a-default-rtdb.firebaseio.com/"
         };
@@ -118,13 +121,11 @@
 
         function closeModal() { document.getElementById('taskModal').style.display = 'none'; }
 
-        // 2. LIVE BALANCE FETCHING
         window.onload = () => {
             renderTasks();
             const phone = localStorage.getItem('userPhone');
             
             if (phone) {
-                // Firebase se live balance check karna
                 const balanceRef = database.ref('users/' + phone);
                 balanceRef.on('value', (snapshot) => {
                     const data = snapshot.val();
@@ -132,7 +133,6 @@
                         document.getElementById('mainBalanceDisplay').innerText = "₹" + data.balance;
                         localStorage.setItem('userBalance', data.balance);
                     } else {
-                        // Naya user hai toh data create kar do
                         database.ref('users/' + phone).set({
                             balance: 0,
                             name: localStorage.getItem('userName') || "User"
@@ -140,12 +140,10 @@
                     }
                 });
             } else {
-                // Agar login nahi hai toh index par bhejo
                 window.location.href = "index.html";
             }
         };
 
-        // Modal Form Pre-fill
         if(localStorage.getItem('userName')) document.getElementById('inputName').value = localStorage.getItem('userName');
         if(localStorage.getItem('userPhone')) document.getElementById('inputPhone').value = localStorage.getItem('userPhone');
 
