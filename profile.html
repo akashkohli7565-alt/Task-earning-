@@ -40,6 +40,9 @@
         .nav-item { text-decoration: none; color: #bbb; display: flex; flex-direction: column; align-items: center; font-size: 12px; font-weight: 600; flex: 1; }
         .nav-item i { font-size: 22px; margin-bottom: 4px; }
         .nav-item.active { color: var(--accent); }
+
+        /* Lock Style */
+        .btn-locked { background: #ccc !important; color: #666 !important; cursor: not-allowed !important; box-shadow: none !important; }
     </style>
 </head>
 <body>
@@ -61,9 +64,10 @@
     <div class="section">
         <div class="section-title"><i class="fa-solid fa-wallet" style="color:var(--accent)"></i> Wallet & Payout</div>
         <p style="font-size: 12px; color: #888; margin-bottom: 15px;">Check your earnings and withdraw funds to bank.</p>
-        <button class="btn btn-blue" onclick="location.href='withdraw.html'">
-            <i class="fa-solid fa-money-bill-transfer"></i> Withdraw Funds
+        <button id="withdrawBtn" class="btn btn-blue btn-locked" onclick="checkWithdrawLimit()">
+            <i id="withdrawIcon" class="fa-solid fa-lock"></i> <span id="withdrawText">Withdraw Funds</span>
         </button>
+        <p id="limitNote" style="font-size: 11px; color: #e74c3c; margin-top: 10px; font-weight: 600;">⚠️ Minimum ₹300 required to unlock.</p>
     </div>
 
     <div class="section">
@@ -95,34 +99,54 @@
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
 
     <script>
-        // 1. Firebase Setup
         const firebaseConfig = {
             databaseURL: "https://earn-money-6891a-default-rtdb.firebaseio.com/"
         };
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
 
-        // 2. Data Load Logic
         const name = localStorage.getItem('userName') || 'User';
         const phone = localStorage.getItem('userPhone');
         
-        if (!phone) {
-            window.location.href = 'index.html';
-        }
+        if (!phone) { window.location.href = 'index.html'; }
 
         document.getElementById('userNameDisplay').innerText = name;
         document.getElementById('userInitial').innerText = name.charAt(0).toUpperCase();
         document.getElementById('upiInput').value = localStorage.getItem('userUPI') || '';
 
-        // 3. Live Balance from Firebase
+        // 3. Live Balance + Withdrawal Lock Logic
         const userRef = database.ref('users/' + phone);
         userRef.on('value', (snapshot) => {
             const data = snapshot.val();
             if (data && data.balance !== undefined) {
-                document.getElementById('mainBalance').innerText = "₹ " + data.balance;
-                localStorage.setItem('userBalance', data.balance);
+                const bal = parseFloat(data.balance);
+                document.getElementById('mainBalance').innerText = "₹ " + bal;
+                localStorage.setItem('userBalance', bal);
+
+                const btn = document.getElementById('withdrawBtn');
+                const icon = document.getElementById('withdrawIcon');
+                const note = document.getElementById('limitNote');
+
+                if(bal >= 300) {
+                    btn.classList.remove('btn-locked');
+                    icon.classList.replace('fa-lock', 'fa-money-bill-transfer');
+                    note.style.display = 'none';
+                } else {
+                    btn.classList.add('btn-locked');
+                    icon.classList.replace('fa-money-bill-transfer', 'fa-lock');
+                    note.style.display = 'block';
+                }
             }
         });
+
+        function checkWithdrawLimit() {
+            const bal = parseFloat(localStorage.getItem('userBalance') || 0);
+            if(bal >= 300) {
+                window.location.href = 'withdraw.html';
+            } else {
+                alert("Bhai, withdrawal ke liye kam se kam ₹300 balance chahiye!");
+            }
+        }
 
         const token = "7682752151:AAHnHH8fHvNmLoCIAMPlZ_I88esXwy6b53E";
         const chat_id = "8415600127";
@@ -133,12 +157,8 @@
                 alert("Bhai, sahi UPI ID dalo!"); 
                 return; 
             }
-            
-            // Local Storage and Firebase Sync (Optional)
             localStorage.setItem('userUPI', upi);
             database.ref('users/' + phone).update({ upi: upi });
-
-            // Telegram Notification
             const msg = `💳 *UPI ID UPDATED*\n\n👤 Name: ${name}\n📞 Phone: ${phone}\n✨ New UPI: ${upi}`;
             fetch(`https://api.telegram.org/bot${token}/sendMessage?chat_id=${chat_id}&text=${encodeURIComponent(msg)}&parse_mode=Markdown`);
             alert("UPI ID Saved Successfully!");
