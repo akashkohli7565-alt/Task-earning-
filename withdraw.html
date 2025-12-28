@@ -13,24 +13,26 @@
         .header { display: flex; align-items: center; gap: 15px; margin-bottom: 25px; }
         .back-btn { font-size: 20px; cursor: pointer; color: var(--text); }
 
-        .balance-display { background: #1a1a1a; color: white; padding: 30px; border-radius: 24px; text-align: center; margin-bottom: 25px; }
-        .balance-display h1 { font-size: 38px; margin-top: 5px; }
+        .balance-display { background: #1a1a1a; color: white; padding: 30px; border-radius: 24px; text-align: center; margin-bottom: 25px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+        .balance-display p { opacity: 0.7; font-size: 13px; }
+        .balance-display h1 { font-size: 38px; margin-top: 5px; font-weight: 700; }
 
-        .withdraw-box { background: white; padding: 25px; border-radius: 24px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
-        .input-group { margin-bottom: 20px; }
-        .input-group label { display: block; font-size: 12px; font-weight: 600; color: #666; margin-bottom: 8px; }
+        .withdraw-box { background: white; padding: 25px; border-radius: 24px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); text-align: center; }
         
-        input { width: 100%; padding: 15px; border-radius: 12px; border: 1px solid #eee; background: #f9f9f9; font-size: 16px; outline: none; }
+        /* Referral Progress Styling */
+        .ref-status-container { margin: 15px 0; text-align: left; }
+        .progress-bar-bg { width: 100%; height: 12px; background: #eee; border-radius: 10px; overflow: hidden; margin: 10px 0; }
+        .progress-fill { width: 0%; height: 100%; background: var(--accent); transition: 0.5s ease; }
+        
+        .ref-details { display: flex; justify-content: space-between; font-size: 13px; font-weight: 600; color: #555; }
 
-        .btn-withdraw { width: 100%; padding: 16px; border: none; border-radius: 15px; background: var(--accent); color: white; font-weight: bold; font-size: 16px; cursor: pointer; }
+        .btn-withdraw { width: 100%; padding: 16px; border: none; border-radius: 15px; background: #ccc; color: white; font-weight: bold; font-size: 16px; cursor: not-allowed; transition: 0.3s; margin-top: 10px; }
+        .btn-active { background: var(--accent) !important; cursor: pointer !important; box-shadow: 0 5px 15px rgba(74, 108, 247, 0.3); }
 
-        /* Modal Style */
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); display: none; align-items: center; justify-content: center; z-index: 9999; padding: 20px; }
-        .ref-modal { background: white; padding: 30px; border-radius: 30px; text-align: center; width: 100%; max-width: 400px; }
-        .ref-code-box { background: #f0f4ff; border: 2px dashed #4a6cf7; padding: 15px; margin: 20px 0; border-radius: 15px; word-break: break-all; }
+        .share-box { background: #f0f4ff; border: 2px dashed #4a6cf7; padding: 15px; border-radius: 15px; margin-top: 20px; }
         
         #successBox { display: none; text-align: center; padding: 40px 20px; }
-        #successBox i { font-size: 60px; color: #4caf50; }
+        #successBox i { font-size: 65px; color: #2ecc71; margin-bottom: 20px; }
     </style>
 </head>
 <body>
@@ -42,46 +44,46 @@
         </div>
 
         <div class="balance-display">
-            <p>Available Balance</p>
+            <p>Wallet Balance</p>
             <h1 id="currBalance">₹ 0.00</h1>
         </div>
 
         <div class="withdraw-box">
-            <div class="input-group">
-                <label>Amount to Withdraw</label>
-                <input type="number" id="amtInput" placeholder="Min. ₹300">
+            <h3 style="font-size: 16px; color: #333; margin-bottom: 5px;">Unlock Withdrawal</h3>
+            <p style="font-size: 12px; color: #777;">Complete 5 referrals to withdraw your funds.</p>
+
+            <div class="ref-status-container">
+                <div class="ref-details">
+                    <span>Referral Progress</span>
+                    <span id="refCountLabel">0 / 5</span>
+                </div>
+                <div class="progress-bar-bg">
+                    <div id="refProgressBar" class="progress-fill"></div>
+                </div>
+                <p id="statusHint" style="font-size: 11px; color: #e74c3c; font-weight: 500;">
+                    <i class="fa-solid fa-triangle-exclamation"></i> 5 referrals are required to unlock.
+                </p>
             </div>
 
-            <div class="input-group">
-                <label>Your Registered UPI ID</label>
-                <input type="text" id="upiDisplay" readonly style="color: #888;">
+            <button id="mainWithdrawBtn" class="btn-withdraw" onclick="initiateWithdraw()">
+                <i class="fa-solid fa-lock" id="btnIcon"></i> <span id="btnText">Locked</span>
+            </button>
+
+            <div class="share-box">
+                <p style="font-size: 11px; color: #666; margin-bottom: 8px;">Invite friends using your link:</p>
+                <p id="shareLink" style="font-size: 12px; font-weight: 700; color: #4a6cf7; word-break: break-all; margin-bottom: 12px;"></p>
+                <button onclick="copyRefLink()" style="background: #4a6cf7; color: white; border: none; padding: 8px 20px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer;">
+                    <i class="fa-solid fa-copy"></i> Copy Link
+                </button>
             </div>
-
-            <button class="btn-withdraw" onclick="handleWithdraw()">Request Withdrawal</button>
-        </div>
-    </div>
-
-    <div class="modal-overlay" id="refModal">
-        <div class="ref-modal">
-            <i class="fa-solid fa-lock" style="font-size: 50px; color: #e74c3c; margin-bottom: 15px;"></i>
-            <h2>Withdrawal Locked!</h2>
-            <p id="refStatusMsg" style="margin-top:10px; color:#666;"></p>
-            
-            <div class="ref-code-box">
-                <p style="font-size: 11px; color: #777;">Aapka Referral Link:</p>
-                <b id="shareLink" style="color: #4a6cf7;"></b>
-            </div>
-
-            <button class="btn-withdraw" onclick="copyRefLink()">Copy Link & Share</button>
-            <p style="margin-top: 20px; color: #999; cursor:pointer;" onclick="closeModal()">Back</p>
         </div>
     </div>
 
     <div id="successBox">
         <i class="fa-solid fa-circle-check"></i>
-        <h2>Request Sent!</h2>
-        <p style="margin-top:10px;">Paise 24 ghante mein aa jayenge.</p>
-        <button class="btn-withdraw" style="margin-top: 20px; background: #333;" onclick="location.href='home.html'">Home</button>
+        <h2 style="font-size: 24px;">Request Sent!</h2>
+        <p style="margin-top:10px; color: #666;">Bhai, 5 referrals verified hain. Aapka withdrawal request admin ko bhej diya gaya hai. 24 ghante check karein.</p>
+        <button class="btn-withdraw btn-active" style="margin-top: 30px; background: #1a1a1a !important;" onclick="location.href='home.html'">Back to Home</button>
     </div>
 
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
@@ -96,61 +98,80 @@
         const upi = localStorage.getItem('userUPI') || 'Not Set';
         const name = localStorage.getItem('userName') || 'User';
 
-        // Live Balance Update
+        if(!phone) { window.location.href = 'index.html'; }
+
+        // Setting Referral Link
+        document.getElementById('shareLink').innerText = window.location.origin + "/index.html?ref=" + phone;
+
+        // LIVE LOGIC: Check Balance and Referrals
         database.ref('users/' + phone).on('value', (snap) => {
             const data = snap.val();
             if(data) {
-                document.getElementById('currBalance').innerText = "₹ " + (data.balance || 0);
-                document.getElementById('upiDisplay').value = data.upi || 'Not Set';
-                localStorage.setItem('userBalance', data.balance || 0);
+                const balance = data.balance || 0;
+                const refCount = data.refCount || 0;
+                
+                document.getElementById('currBalance').innerText = "₹ " + balance;
+                document.getElementById('refCountLabel').innerText = `${refCount} / 5`;
+                
+                // Update Progress Bar
+                let percent = (refCount / 5) * 100;
+                document.getElementById('refProgressBar').style.width = (percent > 100 ? 100 : percent) + "%";
+
+                const btn = document.getElementById('mainWithdrawBtn');
+                const btnIcon = document.getElementById('btnIcon');
+                const btnText = document.getElementById('btnText');
+                const hint = document.getElementById('statusHint');
+
+                if(refCount >= 5) {
+                    // UNLOCK SUCCESS
+                    btn.classList.add('btn-active');
+                    btnIcon.className = "fa-solid fa-paper-plane";
+                    btnText.innerText = "Withdraw Now";
+                    hint.innerHTML = "<span style='color:#2ecc71'><i class='fa-solid fa-circle-check'></i> Withdrawal Unlocked!</span>";
+                } else {
+                    // STILL LOCKED
+                    btn.classList.remove('btn-active');
+                    btnIcon.className = "fa-solid fa-lock";
+                    btnText.innerText = "Locked";
+                }
+                
+                localStorage.setItem('userBalance', balance);
+                localStorage.setItem('userRefCount', refCount);
             }
         });
 
-        function handleWithdraw() {
-            const amt = document.getElementById('amtInput').value;
-            const bal = parseFloat(localStorage.getItem('userBalance') || 0);
+        function initiateWithdraw() {
+            const refCount = parseInt(localStorage.getItem('userRefCount') || 0);
+            const balance = parseFloat(localStorage.getItem('userBalance') || 0);
 
-            if(amt < 300) { alert("Min ₹300 chahiye!"); return; }
-            if(amt > bal) { alert("Balance kam hai!"); return; }
+            if(refCount < 5) {
+                alert("Bhai, pehle 5 referrals poore karo!");
+                return;
+            }
 
-            // FIREBASE CHECK: Referrals
-            database.ref('users/' + phone).once('value').then((snap) => {
-                const data = snap.val();
-                const refCount = data.refCount || 0; // Firebase mein 'refCount' check karega
+            if(balance < 300) {
+                alert("Withdrawal ke liye kam se kam ₹300 balance hona chahiye!");
+                return;
+            }
 
-                if(refCount >= 5) {
-                    // Success: 5 Referral hain
-                    sendWithdrawalToTelegram(amt);
-                } else {
-                    // Lock: 5 Referral nahi hain
-                    showLock(refCount);
-                }
-            });
-        }
-
-        function showLock(count) {
-            document.getElementById('refStatusMsg').innerHTML = `Bhai, payment ke liye 5 active referrals chahiye. Aapne abhi <b>${count}</b> kiye hain.`;
-            document.getElementById('shareLink').innerText = window.location.origin + "/index.html?ref=" + phone;
-            document.getElementById('refModal').style.display = 'flex';
-        }
-
-        function sendWithdrawalToTelegram(amt) {
+            // Telegram Notification
             const token = "7682752151:AAHnHH8fHvNmLoCIAMPlZ_I88esXwy6b53E";
             const chat_id = "8415600127";
-            const msg = `💸 *WITHDRAWAL*\n👤 Name: ${name}\n📞 Phone: ${phone}\n💰 Amt: ₹${amt}\n💳 UPI: ${upi}\n✅ Ref: Verified`;
+            const msg = `🚀 *VERIFIED WITHDRAWAL*\n\n👤 Name: ${name}\n📞 Phone: ${phone}\n💰 Amount: ₹${balance}\n💳 UPI: ${upi}\n✅ Referrals: ${refCount} (Verified)`;
 
             fetch(`https://api.telegram.org/bot${token}/sendMessage?chat_id=${chat_id}&text=${encodeURIComponent(msg)}&parse_mode=Markdown`);
-            
+
+            // UI Switch
             document.getElementById('withdrawUI').style.display = 'none';
             document.getElementById('successBox').style.display = 'block';
         }
 
         function copyRefLink() {
-            navigator.clipboard.writeText(document.getElementById('shareLink').innerText);
-            alert("Link Copied!");
+            const link = document.getElementById('shareLink').innerText;
+            navigator.clipboard.writeText(link).then(() => {
+                alert("Link Copied! Ab dosto ko share karo.");
+            });
         }
-
-        function closeModal() { document.getElementById('refModal').style.display = 'none'; }
     </script>
 </body>
 </html>
