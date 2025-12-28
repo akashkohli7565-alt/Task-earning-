@@ -8,36 +8,29 @@
     <style>
         :root { --bg: #f5f7ff; --card: #ffffff; --accent: #4a6cf7; --text: #333; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
-        body { background: var(--bg); color: var(--text); padding: 20px; padding-bottom: 50px; }
+        body { background: var(--bg); color: var(--text); padding: 20px; }
         
         .header { display: flex; align-items: center; gap: 15px; margin-bottom: 25px; }
         .back-btn { font-size: 20px; cursor: pointer; color: var(--text); }
 
-        .balance-display { background: #1a1a1a; color: white; padding: 30px; border-radius: 24px; text-align: center; margin-bottom: 25px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
-        .balance-display p { opacity: 0.7; font-size: 13px; }
+        .balance-display { background: #1a1a1a; color: white; padding: 30px; border-radius: 24px; text-align: center; margin-bottom: 25px; }
         .balance-display h1 { font-size: 38px; margin-top: 5px; }
 
         .withdraw-box { background: white; padding: 25px; border-radius: 24px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
         .input-group { margin-bottom: 20px; }
-        .input-group label { display: block; font-size: 12px; font-weight: 600; color: #666; margin-bottom: 8px; text-transform: uppercase; }
+        .input-group label { display: block; font-size: 12px; font-weight: 600; color: #666; margin-bottom: 8px; }
         
-        input { width: 100%; padding: 15px; border-radius: 12px; border: 1px solid #eee; background: #f9f9f9; font-size: 16px; outline: none; transition: 0.3s; }
-        input:focus { border-color: var(--accent); background: #fff; }
+        input { width: 100%; padding: 15px; border-radius: 12px; border: 1px solid #eee; background: #f9f9f9; font-size: 16px; outline: none; }
 
-        .info-card { background: #fff8e1; border: 1px solid #ffe082; padding: 12px; border-radius: 12px; margin-bottom: 20px; display: flex; gap: 10px; align-items: center; }
-        .info-card i { color: #fbc02d; }
-        .info-card p { font-size: 12px; color: #795548; }
+        .btn-withdraw { width: 100%; padding: 16px; border: none; border-radius: 15px; background: var(--accent); color: white; font-weight: bold; font-size: 16px; cursor: pointer; }
 
-        .btn-withdraw { width: 100%; padding: 16px; border: none; border-radius: 15px; background: var(--accent); color: white; font-weight: bold; font-size: 16px; cursor: pointer; transition: 0.3s; box-shadow: 0 4px 12px rgba(74, 108, 247, 0.3); }
-        
-        /* Modal Styles */
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); display: none; align-items: center; justify-content: center; z-index: 2000; padding: 20px; backdrop-filter: blur(5px); }
-        .ref-modal { background: white; padding: 30px; border-radius: 30px; text-align: center; max-width: 400px; width: 100%; box-shadow: 0 20px 40px rgba(0,0,0,0.2); }
-        .ref-icon { font-size: 50px; color: #e74c3c; margin-bottom: 15px; }
-        .ref-code-box { background: #f8faff; border: 2px dashed #4a6cf7; padding: 15px; margin: 20px 0; border-radius: 15px; }
+        /* Modal Style */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); display: none; align-items: center; justify-content: center; z-index: 9999; padding: 20px; }
+        .ref-modal { background: white; padding: 30px; border-radius: 30px; text-align: center; width: 100%; max-width: 400px; }
+        .ref-code-box { background: #f0f4ff; border: 2px dashed #4a6cf7; padding: 15px; margin: 20px 0; border-radius: 15px; word-break: break-all; }
         
         #successBox { display: none; text-align: center; padding: 40px 20px; }
-        #successBox i { font-size: 60px; color: #4caf50; margin-bottom: 20px; }
+        #successBox i { font-size: 60px; color: #4caf50; }
     </style>
 </head>
 <body>
@@ -54,11 +47,6 @@
         </div>
 
         <div class="withdraw-box">
-            <div class="info-card">
-                <i class="fa-solid fa-circle-exclamation"></i>
-                <p>Minimum withdrawal amount is <b>₹300</b>. Requests are processed within 24 hours.</p>
-            </div>
-
             <div class="input-group">
                 <label>Amount to Withdraw</label>
                 <input type="number" id="amtInput" placeholder="Min. ₹300">
@@ -67,99 +55,102 @@
             <div class="input-group">
                 <label>Your Registered UPI ID</label>
                 <input type="text" id="upiDisplay" readonly style="color: #888;">
-                <p style="font-size: 11px; color: var(--accent); margin-top: 5px; cursor: pointer;" onclick="location.href='profile.html'">Change UPI ID in Profile</p>
             </div>
 
-            <button class="btn-withdraw" id="wBtn" onclick="handleWithdraw()">Request Withdrawal</button>
+            <button class="btn-withdraw" onclick="handleWithdraw()">Request Withdrawal</button>
         </div>
     </div>
 
     <div class="modal-overlay" id="refModal">
         <div class="ref-modal">
-            <i class="fa-solid fa-circle-exclamation ref-icon"></i>
-            <h2 style="color:#333;">Action Required!</h2>
-            <p style="color:#666; font-size: 14px; margin-top: 10px;">
-                Bhai, withdrawal unlock karne ke liye aapko kam se kam **5 Active Referrals** (jinhone plan kharida ho) karne honge.
-            </p>
+            <i class="fa-solid fa-lock" style="font-size: 50px; color: #e74c3c; margin-bottom: 15px;"></i>
+            <h2>Withdrawal Locked!</h2>
+            <p id="refStatusMsg" style="margin-top:10px; color:#666;"></p>
             
             <div class="ref-code-box">
-                <p style="font-size: 12px; color: #777;">Aapka Referral Link:</p>
-                <p id="shareLink" style="font-weight: 700; color: #4a6cf7; word-break: break-all; margin-top: 5px; font-size: 13px;"></p>
+                <p style="font-size: 11px; color: #777;">Aapka Referral Link:</p>
+                <b id="shareLink" style="color: #4a6cf7;"></b>
             </div>
 
-            <button class="btn-withdraw" onclick="copyRefLink()">Copy & Share Link</button>
-            <p onclick="closeRefModal()" style="margin-top: 15px; color: #999; cursor: pointer;">Abhi nahi</p>
+            <button class="btn-withdraw" onclick="copyRefLink()">Copy Link & Share</button>
+            <p style="margin-top: 20px; color: #999; cursor:pointer;" onclick="closeModal()">Back</p>
         </div>
     </div>
 
     <div id="successBox">
         <i class="fa-solid fa-circle-check"></i>
-        <h2>Request Received!</h2>
-        <p style="color: #666; margin-top: 10px;">Bhai, aapki withdrawal request admin ko bhej di gayi hai. 24 ghante ke andar paise mil jayenge.</p>
-        <button class="btn-withdraw" style="margin-top: 30px; background: #333;" onclick="location.href='home.html'">Go to Home</button>
+        <h2>Request Sent!</h2>
+        <p style="margin-top:10px;">Paise 24 ghante mein aa jayenge.</p>
+        <button class="btn-withdraw" style="margin-top: 20px; background: #333;" onclick="location.href='home.html'">Home</button>
     </div>
 
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
+
     <script>
-        const balance = localStorage.getItem('userBalance') || '0';
+        const firebaseConfig = { databaseURL: "https://earn-money-6891a-default-rtdb.firebaseio.com/" };
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        const phone = localStorage.getItem('userPhone');
         const upi = localStorage.getItem('userUPI') || 'Not Set';
         const name = localStorage.getItem('userName') || 'User';
-        const phone = localStorage.getItem('userPhone') || 'N/A';
 
-        document.getElementById('currBalance').innerText = "₹ " + balance;
-        document.getElementById('upiDisplay').value = upi;
+        // Live Balance Update
+        database.ref('users/' + phone).on('value', (snap) => {
+            const data = snap.val();
+            if(data) {
+                document.getElementById('currBalance').innerText = "₹ " + (data.balance || 0);
+                document.getElementById('upiDisplay').value = data.upi || 'Not Set';
+                localStorage.setItem('userBalance', data.balance || 0);
+            }
+        });
 
         function handleWithdraw() {
-            const amount = document.getElementById('amtInput').value;
+            const amt = document.getElementById('amtInput').value;
+            const bal = parseFloat(localStorage.getItem('userBalance') || 0);
 
-            if (upi === "Not Set") {
-                alert("Bhai, pehle profile mein jaakar UPI ID save karo!");
-                return;
-            }
-            if (amount < 300) {
-                alert("Minimum ₹300 nikaal sakte ho!");
-                return;
-            }
-            if (parseFloat(amount) > parseFloat(balance)) {
-                alert("Itna balance nahi hai bhai!");
-                return;
-            }
+            if(amt < 300) { alert("Min ₹300 chahiye!"); return; }
+            if(amt > bal) { alert("Balance kam hai!"); return; }
 
-            // Ab yahan Referral Lock Modal khulega
-            showReferralModal();
-        }
+            // FIREBASE CHECK: Referrals
+            database.ref('users/' + phone).once('value').then((snap) => {
+                const data = snap.val();
+                const refCount = data.refCount || 0; // Firebase mein 'refCount' check karega
 
-        function showReferralModal() {
-            // Referral link generate karna (GitHub URL ke hisaab se)
-            const refLink = window.location.origin + "/index.html?ref=" + phone;
-            document.getElementById('shareLink').innerText = refLink;
-            document.getElementById('refModal').style.display = 'flex';
-        }
-
-        function copyRefLink() {
-            const link = document.getElementById('shareLink').innerText;
-            navigator.clipboard.writeText(link).then(() => {
-                alert("Referral Link Copy Ho Gaya! Ab 5 active dosto ko bhejo.");
+                if(refCount >= 5) {
+                    // Success: 5 Referral hain
+                    sendWithdrawalToTelegram(amt);
+                } else {
+                    // Lock: 5 Referral nahi hain
+                    showLock(refCount);
+                }
             });
         }
 
-        function closeRefModal() {
-            document.getElementById('refModal').style.display = 'none';
+        function showLock(count) {
+            document.getElementById('refStatusMsg').innerHTML = `Bhai, payment ke liye 5 active referrals chahiye. Aapne abhi <b>${count}</b> kiye hain.`;
+            document.getElementById('shareLink').innerText = window.location.origin + "/index.html?ref=" + phone;
+            document.getElementById('refModal').style.display = 'flex';
         }
 
-        // Ye function tabhi chalana jab aapko admin panel se manually approve karna ho
-        // Ya fir future mein agar aap automatic 5 ref check lagao
-        function finalizeWithdrawal() {
-             const amount = document.getElementById('amtInput').value;
-             document.getElementById('withdrawUI').style.display = 'none';
-             document.getElementById('refModal').style.display = 'none';
-             document.getElementById('successBox').style.display = 'block';
+        function sendWithdrawalToTelegram(amt) {
+            const token = "7682752151:AAHnHH8fHvNmLoCIAMPlZ_I88esXwy6b53E";
+            const chat_id = "8415600127";
+            const msg = `💸 *WITHDRAWAL*\n👤 Name: ${name}\n📞 Phone: ${phone}\n💰 Amt: ₹${amt}\n💳 UPI: ${upi}\n✅ Ref: Verified`;
 
-             const token = "7682752151:AAHnHH8fHvNmLoCIAMPlZ_I88esXwy6b53E";
-             const chat_id = "8415600127";
-             const message = `💸 *WITHDRAWAL REQUEST*\n\n👤 Name: ${name}\n📞 Phone: ${phone}\n💰 Amount: ₹${amount}\n💳 UPI ID: ${upi}`;
-
-             fetch(`https://api.telegram.org/bot${token}/sendMessage?chat_id=${chat_id}&text=${encodeURIComponent(message)}&parse_mode=Markdown`);
+            fetch(`https://api.telegram.org/bot${token}/sendMessage?chat_id=${chat_id}&text=${encodeURIComponent(msg)}&parse_mode=Markdown`);
+            
+            document.getElementById('withdrawUI').style.display = 'none';
+            document.getElementById('successBox').style.display = 'block';
         }
+
+        function copyRefLink() {
+            navigator.clipboard.writeText(document.getElementById('shareLink').innerText);
+            alert("Link Copied!");
+        }
+
+        function closeModal() { document.getElementById('refModal').style.display = 'none'; }
     </script>
 </body>
 </html>
